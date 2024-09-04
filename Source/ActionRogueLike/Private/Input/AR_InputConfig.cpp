@@ -13,6 +13,7 @@ void UAR_InputConfig::SetupInputActions()
 	IMC_BaseContext = LoadObject<UInputMappingContext>(this, *FPathLibrary::IMC_BaseContextPath);
 	IA_Move = LoadObject<UInputAction>(this, *FPathLibrary::IA_MovePath);
 	IA_Turn = LoadObject<UInputAction>(this, *FPathLibrary::IA_TurnPath);
+	IA_Jump = LoadObject<UInputAction>(this, *FPathLibrary::IA_JumpPath);
 	IA_SwitchWeapon = LoadObject<UInputAction>(this, *FPathLibrary::IA_SwitchWeaponPath);
 	IA_Fire = LoadObject<UInputAction>(this, *FPathLibrary::IA_FirePath);
 	IA_Reload = LoadObject<UInputAction>(this, *FPathLibrary::IA_ReloadPath);

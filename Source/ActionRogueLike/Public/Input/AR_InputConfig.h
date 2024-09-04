@@ -27,6 +27,8 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
 	TWeakObjectPtr<UInputAction> IA_Turn;
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
+	TWeakObjectPtr<UInputAction> IA_Jump;
+	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
 	TWeakObjectPtr<UInputAction> IA_SwitchWeapon;
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
 	TWeakObjectPtr<UInputAction> IA_Fire;

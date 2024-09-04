@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "AR_Character.generated.h"
 
+class UAR_InteractionComponent;
 class UAR_InputConfig;
 class USpringArmComponent;
 class UCameraComponent;
@@ -19,11 +20,17 @@ class ACTIONROGUELIKE_API AAR_Character : public ACharacter
 
 private:
 	void SetupCameraComponents();
+	void SetupComponents();
 	void AddMappingContext(const AAR_PlayerController* PlayerController, const UAR_InputConfig* Config);
 	void SetupInputComponent(UInputComponent* PlayerInputComponent, const UAR_InputConfig* Config);
 	void BindMovement(const TWeakObjectPtr<UEnhancedInputComponent>& EnhancedInputComponent, const UAR_InputConfig* Config);
 	void HandleMove(const FInputActionValue& InputActionValue);
 	void HandleTurn(const FInputActionValue& InputActionValue);
+	void HandleJump(const FInputActionValue& InputActionValue);
+	void SpawnProjectile();
+	void HandlePrimaryAttack(const FInputActionValue& InputActionValue);
+	void HandleInteract(const FInputActionValue& InputActionValue);
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnConstruction(const FTransform& Transform) override;
@@ -38,4 +45,9 @@ private:
 	USpringArmComponent* SpringArmComponent;
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* CameraComponent;
+	UPROPERTY(EditDefaultsOnly)
+	UAR_InteractionComponent* InteractionComponent;
+	UPROPERTY(EditDefaultsOnly, Category= "Animations")
+	UAnimMontage* PrimaryAttackAnim;
+	FTimerHandle PrimaryAttackTimerHandle;
 };
