@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AR_ProjectileBase.generated.h"
 
+class UParticleEmitter;
 class UProjectileMovementComponent;
 class UBoxComponent;
 
@@ -20,8 +21,10 @@ private:
 	
 protected:
 	virtual void BeginPlay() override;
-	UFUNCTION()
-	void HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
 private:
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* BoxComponent;
@@ -30,7 +33,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent* ParticleSystem;
 	UPROPERTY(VisibleAnywhere)
-	float InitialVelocity;
+	UParticleSystem* Explosion;
 	UPROPERTY(VisibleAnywhere)
 	FVector CachedLaunchPosition;
 };

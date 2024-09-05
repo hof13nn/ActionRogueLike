@@ -30,7 +30,7 @@ private:
 	USceneComponent* Root;
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Mesh;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	UStaticMeshComponent* LidMesh;
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* BoxComponent;

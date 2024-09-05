@@ -26,6 +26,6 @@ private:
 	UStaticMeshComponent* StaticMeshComponent;
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* BoxComponent;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	URadialForceComponent* RadialForceComponent;
 };

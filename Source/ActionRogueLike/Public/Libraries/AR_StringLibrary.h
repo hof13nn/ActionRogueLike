@@ -57,7 +57,8 @@ public:
 	inline static const FString IA_HealthPath = TEXT("/Game/Input/Actions/Test/IA_Health.IA_Health");
 	//Objects
 	inline static const FString ProjectilePath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_Projectile.P_Gideon_Primary_Projectile");
-	//UI
+	inline static const FString ProjectileExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_HitWorld.P_Gideon_Primary_HitWorld");
+	//UI 
 	inline static const FString PlayerHUDPath = TEXT("/Game/BPs/UI/Player/WBP_Player_HUD.WBP_Player_HUD_C");
 	inline static const FString UnselectedWeaponPanelPath = TEXT("/Game/BPs/UI/Player/Objects/WBP_UnselectedWeaponPanel.WBP_UnselectedWeaponPanel_C");
 	inline static const FString SelectedWeaponPanelPath = TEXT("/Game/BPs/UI/Player/Objects/WBP_SelectedWeaponPanel.WBP_SelectedWeaponPanel_C");

@@ -241,6 +241,7 @@ void AAR_Character::SpawnProjectile()
 		FActorSpawnParameters SpawnParameters;
 		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParameters.Owner = this;
+		SpawnParameters.Instigator = this;
 
 		const FRotator Rotation = GetControlRotation();
 		const FRotator YawRotation = FRotator(0, Rotation.Yaw, 0);

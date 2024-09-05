@@ -5,6 +5,7 @@
 #include "AR_StringLibrary.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 
@@ -12,7 +13,6 @@ AAR_ProjectileBase::AAR_ProjectileBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	
-	InitialVelocity = 1000.f;
 	CachedLaunchPosition = FVector::ZeroVector;
 	Tags.Emplace(FTagLibrary::ProjectileTag);
 	
@@ -64,20 +64,33 @@ void AAR_ProjectileBase::SetupComponents()
 			}
 		}
 	}
+
+	if (!Explosion)
+	{
+		if (UParticleSystem* ParticleEmitter = LoadObject<UParticleSystem>(this, *FPathLibrary::ProjectileExplosionPath))
+		{
+			Explosion = ParticleEmitter;
+		}
+	}
 }
 
 // Called when the game starts or when spawned
 void AAR_ProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// if (ParticleSystem)
-	// ParticleSystem -> Activate(true);
+	
 	CachedLaunchPosition = GetActorLocation();
 }
 
 void AAR_ProjectileBase::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Destroy();
+	if (Explosion)
+	{
+		if (UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AAR_ProjectileBase::HandleHit: Destroy"));
+			Destroy();
+		}
+	}
 }
