@@ -5,6 +5,9 @@
 #include "AR_InputConfig.h"
 #include "AR_PlayerController.h"
 #include "AR_ProjectileBase.h"
+#include "AR_ProjectileMain.h"
+#include "AR_ProjectilePortal.h"
+#include "AR_ProjectileSpecial.h"
 #include "AR_StringLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -12,6 +15,7 @@
 #include "Components/AR_InteractionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 // Sets default values
@@ -159,16 +163,17 @@ void AAR_Character::BindMovement(const TWeakObjectPtr<UEnhancedInputComponent>& 
 	{
 		if (Config)
 		{
-			if (Config -> IA_Move.IsValid() && Config -> IA_Turn.Get())
+			if (Config -> IA_Move.IsValid() && Config -> IA_Turn.IsValid() && Config -> IA_Jump.IsValid()
+				&& Config -> IA_Fire.IsValid() && Config -> IA_SpecialFire.IsValid() && Config -> IA_Teleport.IsValid() && Config -> IA_Interact.IsValid())
 			{
 				EnhancedInputComponent.Get() -> BindAction(Config -> IA_Move.Get(), ETriggerEvent::Triggered, this, &ThisClass::HandleMove);
 				EnhancedInputComponent.Get() -> BindAction(Config -> IA_Turn.Get(), ETriggerEvent::Triggered, this, &ThisClass::HandleTurn);
 				EnhancedInputComponent.Get() -> BindAction(Config -> IA_Jump.Get(), ETriggerEvent::Started, this, &ThisClass::HandleJump);
 				// EnhancedInputComponent.Get()  -> BindAction(InputConfig -> IA_Aim.Get(), ETriggerEvent::Triggered, this, &ThisClass::HandleAim);
-				// EnhancedInputComponent.Get()  -> BindAction(InputConfig -> IA_Aim.Get(), ETriggerEvent::Completed, this, &ThisClass::HandleAim);
 				EnhancedInputComponent.Get()  -> BindAction(Config -> IA_Fire.Get(), ETriggerEvent::Started, this, &ThisClass::HandlePrimaryAttack);
+				EnhancedInputComponent.Get()  -> BindAction(Config -> IA_SpecialFire.Get(), ETriggerEvent::Started, this, &ThisClass::HandleSpecialAttack);
+				EnhancedInputComponent.Get()  -> BindAction(Config -> IA_Teleport.Get(), ETriggerEvent::Started, this, &ThisClass::HandleTeleport);
 				EnhancedInputComponent.Get()  -> BindAction(Config -> IA_Interact.Get(), ETriggerEvent::Started, this, &ThisClass::HandleInteract);
-				// EnhancedInputComponent.Get()  -> BindAction(InputConfig -> IA_Reload.Get(), ETriggerEvent::Triggered, this, &ThisClass::HandleReload);
 				// EnhancedInputComponent.Get()  -> BindAction(InputConfig -> IA_SwitchWeapon.Get(), ETriggerEvent::Started, this, &ThisClass::HandleSwitchWeapon);
 				// EnhancedInputComponent.Get()  -> BindAction(InputConfig -> IA_Health.Get(), ETriggerEvent::Started, this, &ThisClass::HandleHealth);
 			}
@@ -229,12 +234,38 @@ void AAR_Character::HandlePrimaryAttack(const FInputActionValue& InputActionValu
 
 		if (GetWorld())
 		{
-			GetWorld() -> GetTimerManager().SetTimer(PrimaryAttackTimerHandle, this, &ThisClass::SpawnProjectile, .21f);
+			GetWorld() -> GetTimerManager().SetTimer(PrimaryAttackTimerHandle, this, &ThisClass::SpawnMainProjectile, .21f);
 		}
 	}
 }
 
-void AAR_Character::SpawnProjectile()
+void AAR_Character::HandleSpecialAttack(const FInputActionValue& InputActionValue)
+{
+	if (PrimaryAttackAnim)
+	{
+		PlayAnimMontage(PrimaryAttackAnim);
+
+		if (GetWorld())
+		{
+			GetWorld() -> GetTimerManager().SetTimer(PrimaryAttackTimerHandle, this, &ThisClass::SpawnSpecialProjectile, .21f);
+		}
+	}
+}
+
+void AAR_Character::HandleTeleport(const FInputActionValue& InputActionValue)
+{
+	if (PrimaryAttackAnim)
+	{
+		PlayAnimMontage(PrimaryAttackAnim);
+
+		if (GetWorld())
+		{
+			GetWorld() -> GetTimerManager().SetTimer(PrimaryAttackTimerHandle, this, &ThisClass::SpawnTeleportProjectile, .21f);
+		}
+	}
+}
+
+void AAR_Character::SpawnMainProjectile()
 {
 	if (GetMesh())
 	{
@@ -242,20 +273,86 @@ void AAR_Character::SpawnProjectile()
 		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParameters.Owner = this;
 		SpawnParameters.Instigator = this;
-
-		const FRotator Rotation = GetControlRotation();
-		const FRotator YawRotation = FRotator(0, Rotation.Yaw, 0);
+		
 		const FVector SpawnLocation = GetMesh() -> GetSocketLocation(FSocketLibrary::CharacterProjectileSpawnSocket);
-		FTransform Transform = FTransform(YawRotation, SpawnLocation);
+		const FRotator Rotation = CalculateRotation(SpawnLocation);
+		const FTransform Transform = FTransform(Rotation, SpawnLocation);
 
 		if (GetWorld())
 		{
-			if (AAR_ProjectileBase* ProjectileBase = GetWorld() -> SpawnActor<AAR_ProjectileBase>(AAR_ProjectileBase::StaticClass(), Transform, SpawnParameters))
+			if (!GetWorld() -> SpawnActor<AAR_ProjectileMain>(AAR_ProjectileMain::StaticClass(), Transform, SpawnParameters))
 			{
-				ProjectileBase -> SetLifeSpan(5.f);
+				UE_LOG(LogTemp, Error, TEXT("AAR_Character::SpawnProjectile: Couldn't spawn Projectile"));
 			}
 		}
 	}
+}
+
+void AAR_Character::SpawnSpecialProjectile()
+{
+	if (GetMesh())
+	{
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParameters.Owner = this;
+		SpawnParameters.Instigator = this;
+		
+		const FVector SpawnLocation = GetMesh() -> GetSocketLocation(FSocketLibrary::CharacterProjectileSpawnSocket);
+		const FRotator Rotation = CalculateRotation(SpawnLocation);
+		const FTransform Transform = FTransform(Rotation, SpawnLocation);
+
+		if (GetWorld())
+		{
+			if (!GetWorld() -> SpawnActor<AAR_ProjectileBase>(AAR_ProjectileSpecial::StaticClass(), Transform, SpawnParameters))
+			{
+				UE_LOG(LogTemp, Error, TEXT("AAR_Character::SpawnProjectile: Couldn't spawn Projectile"));
+			}
+		}
+	}
+}
+
+void AAR_Character::SpawnTeleportProjectile()
+{
+	if (GetMesh())
+	{
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParameters.Owner = this;
+		SpawnParameters.Instigator = this;
+		
+		const FVector SpawnLocation = GetMesh() -> GetSocketLocation(FSocketLibrary::CharacterProjectileSpawnSocket);
+		const FRotator Rotation = CalculateRotation(SpawnLocation);
+		const FTransform Transform = FTransform(Rotation, SpawnLocation);
+
+		if (GetWorld())
+		{
+			if (!GetWorld() -> SpawnActor<AAR_ProjectileBase>(AAR_ProjectilePortal::StaticClass(), Transform, SpawnParameters))
+			{
+				UE_LOG(LogTemp, Error, TEXT("AAR_Character::SpawnProjectile: Couldn't spawn Projectile"));
+			}
+		}
+	}
+}
+
+FRotator AAR_Character::CalculateRotation(const FVector& SpawnLocation) const
+{
+	if (GetWorld() && CameraComponent)
+	{
+		FHitResult HitResult;
+
+		FCollisionObjectQueryParams QueryParams;
+		QueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+		QueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+		
+		const FVector StartLocation = CameraComponent -> GetComponentLocation();
+		const FVector EndLocation = CameraComponent -> GetForwardVector() * 200000.f;
+		
+		const bool bIsHit = GetWorld() -> LineTraceSingleByObjectType(HitResult, StartLocation, EndLocation, QueryParams);
+		DrawDebugLine(GetWorld(), StartLocation, EndLocation, bIsHit ? FColor::Green : FColor::Red, false, 2.f, 0.f, 2.f);
+		return bIsHit ? UKismetMathLibrary::FindLookAtRotation(SpawnLocation, HitResult.Location) : UKismetMathLibrary::FindLookAtRotation(SpawnLocation, EndLocation);
+	}
+
+	return FRotator::ZeroRotator;
 }
 
 void AAR_Character::HandleInteract(const FInputActionValue& InputActionValue)

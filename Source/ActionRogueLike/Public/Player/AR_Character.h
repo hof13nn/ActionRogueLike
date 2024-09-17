@@ -27,8 +27,13 @@ private:
 	void HandleMove(const FInputActionValue& InputActionValue);
 	void HandleTurn(const FInputActionValue& InputActionValue);
 	void HandleJump(const FInputActionValue& InputActionValue);
-	void SpawnProjectile();
+	void SpawnMainProjectile();
+	void SpawnSpecialProjectile();
+	void SpawnTeleportProjectile();
+	FRotator CalculateRotation(const FVector& SpawnLocation) const;
 	void HandlePrimaryAttack(const FInputActionValue& InputActionValue);
+	void HandleSpecialAttack(const FInputActionValue& InputActionValue);
+	void HandleTeleport(const FInputActionValue& InputActionValue);
 	void HandleInteract(const FInputActionValue& InputActionValue);
 	
 protected:

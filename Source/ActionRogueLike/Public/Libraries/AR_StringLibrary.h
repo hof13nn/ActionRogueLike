@@ -48,17 +48,23 @@ public:
 	inline static const FString IA_JumpPath = TEXT("/Game/Input/Actions/IA_Jump.IA_Jump");
 	inline static const FString IA_SwitchWeaponPath = TEXT("/Game/Input/Actions/IA_SwitchWeapon.IA_SwitchWeapon");
 	inline static const FString IA_FirePath = TEXT("/Game/Input/Actions/IA_Fire.IA_Fire");
-	inline static const FString IA_ReloadPath = TEXT("/Game/Input/Actions/IA_Reload.IA_Reload");
-	inline static const FString IA_AimPath = TEXT("/Game/Input/Actions/IA_Aim.IA_Aim");
+	inline static const FString IA_SpecialFire = TEXT("/Game/Input/Actions/IA_SpecialFire.IA_SpecialFire");
+	inline static const FString IA_TeleportPath = TEXT("/Game/Input/Actions/IA_Teleport.IA_Teleport");
 	inline static const FString IA_ZoomInPath = TEXT("/Game/Input/Actions/IA_ZoomIn.IA_ZoomIn");
 	inline static const FString IA_ZoomOutPath = TEXT("/Game/Input/Actions/IA_ZoomOut.IA_ZoomOut");
 	inline static const FString IA_InteractPath = TEXT("/Game/Input/Actions/IA_Interact.IA_Interact");
 	inline static const FString IA_InventoryPath = TEXT("/Game/Input/Actions/IA_Inventory.IA_Inventory");
 	inline static const FString IA_HealthPath = TEXT("/Game/Input/Actions/Test/IA_Health.IA_Health");
+
 	//Objects
-	inline static const FString ProjectilePath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_Projectile.P_Gideon_Primary_Projectile");
-	inline static const FString ProjectileExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_HitWorld.P_Gideon_Primary_HitWorld");
-	//UI 
+	inline static const FString ProjectileMainPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_Projectile.P_Gideon_Primary_Projectile");
+	inline static const FString ProjectileMainExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_HitWorld.P_Gideon_Primary_HitWorld");
+	inline static const FString ProjectileSpecialPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Ultimate/FX/P_Gideon_Ultimate.P_Gideon_Ultimate");
+	inline static const FString ProjectileSpecialExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_HitWorld.P_Gideon_Primary_HitWorld");
+	inline static const FString ProjectileTeleportPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Portal/FX/P_Portal_Cast.P_Portal_Cast");
+	inline static const FString ProjectileTeleportExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Portal/FX/P_Portal_Entrance_Close.P_Portal_Entrance_Close");
+
+	//UI
 	inline static const FString PlayerHUDPath = TEXT("/Game/BPs/UI/Player/WBP_Player_HUD.WBP_Player_HUD_C");
 	inline static const FString UnselectedWeaponPanelPath = TEXT("/Game/BPs/UI/Player/Objects/WBP_UnselectedWeaponPanel.WBP_UnselectedWeaponPanel_C");
 	inline static const FString SelectedWeaponPanelPath = TEXT("/Game/BPs/UI/Player/Objects/WBP_SelectedWeaponPanel.WBP_SelectedWeaponPanel_C");

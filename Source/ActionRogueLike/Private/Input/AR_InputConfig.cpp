@@ -16,8 +16,8 @@ void UAR_InputConfig::SetupInputActions()
 	IA_Jump = LoadObject<UInputAction>(this, *FPathLibrary::IA_JumpPath);
 	IA_SwitchWeapon = LoadObject<UInputAction>(this, *FPathLibrary::IA_SwitchWeaponPath);
 	IA_Fire = LoadObject<UInputAction>(this, *FPathLibrary::IA_FirePath);
-	IA_Reload = LoadObject<UInputAction>(this, *FPathLibrary::IA_ReloadPath);
-	IA_Aim = LoadObject<UInputAction>(this, *FPathLibrary::IA_AimPath);
+	IA_SpecialFire = LoadObject<UInputAction>(this, *FPathLibrary::IA_SpecialFire);
+	IA_Teleport = LoadObject<UInputAction>(this, *FPathLibrary::IA_TeleportPath);
 	IA_ZoomIn = LoadObject<UInputAction>(this, *FPathLibrary::IA_ZoomInPath);
 	IA_ZoomOut = LoadObject<UInputAction>(this, *FPathLibrary::IA_ZoomOutPath);
 	IA_Interact = LoadObject<UInputAction>(this, *FPathLibrary::IA_InteractPath);

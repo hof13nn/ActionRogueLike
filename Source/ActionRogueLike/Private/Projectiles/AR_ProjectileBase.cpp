@@ -5,8 +5,6 @@
 #include "AR_StringLibrary.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 
 AAR_ProjectileBase::AAR_ProjectileBase()
@@ -15,8 +13,8 @@ AAR_ProjectileBase::AAR_ProjectileBase()
 	
 	CachedLaunchPosition = FVector::ZeroVector;
 	Tags.Emplace(FTagLibrary::ProjectileTag);
-	
-	SetupComponents();
+
+	AAR_ProjectileBase::SetupComponents();
 }
 
 void AAR_ProjectileBase::SetupComponents()
@@ -31,9 +29,8 @@ void AAR_ProjectileBase::SetupComponents()
 			BoxComponent -> SetSimulatePhysics(false);
 			BoxComponent -> SetEnableGravity(false);
 			BoxComponent -> SetNotifyRigidBodyCollision(true);
-			BoxComponent -> SetGenerateOverlapEvents(false);
+			BoxComponent -> SetGenerateOverlapEvents(true);
 			BoxComponent -> SetCollisionProfileName(FCollisionProfileLibrary::ProjectileProfile);
-			BoxComponent -> OnComponentHit.AddDynamic(this, &ThisClass::HandleHit);
 			RootComponent = BoxComponent;
 		}
 	}
@@ -44,7 +41,6 @@ void AAR_ProjectileBase::SetupComponents()
 
 		if (MovementComponent)
 		{
-			MovementComponent -> InitialSpeed = 1000.f;
 			MovementComponent -> bRotationFollowsVelocity = true;
 			MovementComponent -> bInitialVelocityInLocalSpace = true;
 			MovementComponent -> ProjectileGravityScale = 0.f;
@@ -54,43 +50,25 @@ void AAR_ProjectileBase::SetupComponents()
 	if (!ParticleSystem)
 	{
 		ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle System Component"));
-		
+
 		if (ParticleSystem)
 		{
-			if (UParticleSystem* Particle = LoadObject<UParticleSystem>(this, *FPathLibrary::ProjectilePath))
-			{
-				ParticleSystem -> SetTemplate(Particle);
-				ParticleSystem -> SetupAttachment(RootComponent);
-			}
-		}
-	}
-
-	if (!Explosion)
-	{
-		if (UParticleSystem* ParticleEmitter = LoadObject<UParticleSystem>(this, *FPathLibrary::ProjectileExplosionPath))
-		{
-			Explosion = ParticleEmitter;
+			ParticleSystem -> SetupAttachment(RootComponent);
 		}
 	}
 }
 
-// Called when the game starts or when spawned
-void AAR_ProjectileBase::BeginPlay()
+void AAR_ProjectileBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::BeginPlay();
-	
-	CachedLaunchPosition = GetActorLocation();
 }
 
-void AAR_ProjectileBase::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+void AAR_ProjectileBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (Explosion)
-	{
-		if (UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation()))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("AAR_ProjectileBase::HandleHit: Destroy"));
-			Destroy();
-		}
-	}
+}
+
+void AAR_ProjectileBase::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 }

@@ -14,18 +14,17 @@ UCLASS()
 class ACTIONROGUELIKE_API AAR_ProjectileBase : public AActor
 {
 	GENERATED_BODY()
-	AAR_ProjectileBase();
 
-private:
-	void SetupComponents();
+public:
+	AAR_ProjectileBase();
 	
 protected:
-	virtual void BeginPlay() override;
-	
-	UFUNCTION(BlueprintCallable)
-	virtual void HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-	
-private:
+	virtual void PostInitializeComponents() override;
+	virtual void SetupComponents();
+	virtual void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+				   FVector NormalImpulse, const FHitResult& Hit);
+protected:
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* BoxComponent;
 	UPROPERTY(VisibleAnywhere)

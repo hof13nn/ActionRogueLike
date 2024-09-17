@@ -16,10 +16,9 @@ private:
 	void SetupComponents();
 	UFUNCTION()
 	void HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
 protected:
-	virtual void BeginPlay() override;
-
-public:
+	virtual void PostInitializeComponents() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly)

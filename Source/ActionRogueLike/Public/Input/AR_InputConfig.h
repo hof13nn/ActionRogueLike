@@ -33,9 +33,9 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
 	TWeakObjectPtr<UInputAction> IA_Fire;
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
-	TWeakObjectPtr<UInputAction> IA_Reload;
+	TWeakObjectPtr<UInputAction> IA_SpecialFire;
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
-	TWeakObjectPtr<UInputAction> IA_Aim;
+	TWeakObjectPtr<UInputAction> IA_Teleport;
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
 	TWeakObjectPtr<UInputAction> IA_ZoomIn;
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")

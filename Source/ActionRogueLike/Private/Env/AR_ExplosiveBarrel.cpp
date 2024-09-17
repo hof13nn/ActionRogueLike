@@ -2,8 +2,6 @@
 
 
 #include "AR_ExplosiveBarrel.h"
-
-#include "AR_StringLibrary.h"
 #include "Components/BoxComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
@@ -38,8 +36,8 @@ void AAR_ExplosiveBarrel::SetupComponents()
 		{
 			BoxComponent -> SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			BoxComponent -> SetCollisionProfileName(TEXT("World Static"));
-			BoxComponent -> OnComponentHit.AddDynamic(this, &ThisClass::HandleHit);
 			BoxComponent -> SetupAttachment(RootComponent);
+			BoxComponent -> OnComponentHit.AddDynamic(this, &ThisClass::HandleHit);
 		}
 	}
 
@@ -53,25 +51,22 @@ void AAR_ExplosiveBarrel::SetupComponents()
 			RadialForceComponent -> Falloff = RIF_Constant;
 			RadialForceComponent -> ImpulseStrength = 2000.f;
 			RadialForceComponent -> bImpulseVelChange = true;
+			RadialForceComponent -> SetAutoActivate(false);
+			RadialForceComponent -> AddCollisionChannelToAffect(ECC_WorldDynamic);
 			RadialForceComponent -> SetupAttachment(RootComponent);
 		}
 	}
 }
 
-// Called when the game starts or when spawned
-void AAR_ExplosiveBarrel::BeginPlay()
+void AAR_ExplosiveBarrel::PostInitializeComponents()
 {
-	Super::BeginPlay();
-	
+	Super::PostInitializeComponents();
 }
 
 void AAR_ExplosiveBarrel::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherActor && OtherActor -> ActorHasTag(FTagLibrary::ProjectileTag))
+	if (RadialForceComponent)
 	{
-		if (RadialForceComponent)
-		{
-			RadialForceComponent -> FireImpulse();
-		}
+		RadialForceComponent -> FireImpulse();
 	}
 }
