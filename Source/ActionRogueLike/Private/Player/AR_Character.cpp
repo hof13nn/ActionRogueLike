@@ -2,6 +2,8 @@
 
 
 #include "AR_Character.h"
+
+#include "AR_AttributeComponent.h"
 #include "AR_InputConfig.h"
 #include "AR_PlayerController.h"
 #include "AR_ProjectileBase.h"
@@ -40,7 +42,7 @@ void AAR_Character::SetupCameraComponents()
 	{
 		SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 
-		if (SpringArmComponent)
+		if (ensure(SpringArmComponent))
 		{
 			SpringArmComponent -> TargetArmLength = 500.f;
 			SpringArmComponent -> bUsePawnControlRotation = true;
@@ -50,7 +52,7 @@ void AAR_Character::SetupCameraComponents()
 			{
 				CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
-				if (CameraComponent)
+				if (ensure(CameraComponent))
 				{
 					CameraComponent -> SetupAttachment(SpringArmComponent);
 				}
@@ -65,9 +67,19 @@ void AAR_Character::SetupComponents()
 	{
 		InteractionComponent = CreateDefaultSubobject<UAR_InteractionComponent>(TEXT("Interaction Component"));
 
-		if (InteractionComponent)
+		if (ensure(InteractionComponent))
 		{
 			AddOwnedComponent(InteractionComponent);
+		}
+	}
+
+	if (!AttributeComponent)
+	{
+		AttributeComponent = CreateDefaultSubobject<UAR_AttributeComponent>(TEXT("Attribute Component"));
+
+		if (ensure(AttributeComponent))
+		{
+			AddOwnedComponent(AttributeComponent);
 		}
 	}
 }

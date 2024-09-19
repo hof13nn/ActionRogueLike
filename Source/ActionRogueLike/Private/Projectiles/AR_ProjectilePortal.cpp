@@ -34,7 +34,7 @@ void AAR_ProjectilePortal::SetupComponents()
 
 	if (MovementComponent)
 	{
-		MovementComponent -> InitialSpeed = 1500.f;
+		MovementComponent -> InitialSpeed = 2500.f;
 	}
 }
 

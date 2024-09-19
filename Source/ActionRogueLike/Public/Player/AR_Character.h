@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "AR_Character.generated.h"
 
+class UAR_AttributeComponent;
 class UAR_InteractionComponent;
 class UAR_InputConfig;
 class USpringArmComponent;
@@ -52,6 +53,8 @@ private:
 	UCameraComponent* CameraComponent;
 	UPROPERTY(EditDefaultsOnly)
 	UAR_InteractionComponent* InteractionComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
+	UAR_AttributeComponent* AttributeComponent;
 	UPROPERTY(EditDefaultsOnly, Category= "Animations")
 	UAnimMontage* PrimaryAttackAnim;
 	FTimerHandle PrimaryAttackTimerHandle;
