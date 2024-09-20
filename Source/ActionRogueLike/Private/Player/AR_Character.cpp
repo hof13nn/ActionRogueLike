@@ -106,6 +106,14 @@ void AAR_Character::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AAR_Character::DecreaseHealth_Implementation(const float& Amount)
+{
+	if (ensure(AttributeComponent))
+	{
+		AttributeComponent -> DecreaseHealth(Amount);
+	}
+}
+
 void AAR_Character::SetupInput(const AAR_PlayerController* PlayerController)
 {
 	if (UAR_InputConfig* InputConfig = LoadObject<UAR_InputConfig>(this, *FPathLibrary::InputConfigPath))

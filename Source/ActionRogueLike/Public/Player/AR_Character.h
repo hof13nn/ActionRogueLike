@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "AR_Damageable.h"
 #include "AR_PlayerController.h"
 #include "GameFramework/Character.h"
 #include "AR_Character.generated.h"
@@ -14,7 +15,7 @@ class UCameraComponent;
 struct FInputActionValue;
 
 UCLASS()
-class ACTIONROGUELIKE_API AAR_Character : public ACharacter
+class ACTIONROGUELIKE_API AAR_Character : public ACharacter, public IAR_Damageable
 {
 	GENERATED_BODY()
 	AAR_Character();
@@ -45,7 +46,7 @@ protected:
 public:
 	void SetupInput(const AAR_PlayerController* PlayerController);
 	virtual void Tick(float DeltaTime) override;
-
+	void DecreaseHealth_Implementation(const float& Amount) override;
 private:
 	UPROPERTY(EditAnywhere)
 	USpringArmComponent* SpringArmComponent;

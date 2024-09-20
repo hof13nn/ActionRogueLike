@@ -33,6 +33,7 @@ public class ActionRogueLike : ModuleRules
 			// "ActionRogueLike/Public/Items",
 			// "ActionRogueLike/Public/Items/Pickups",
 			"ActionRogueLike/Public/Libraries",
+			"ActionRogueLike/Public/Misc",
 			"ActionRogueLike/Public/Player",
 			"ActionRogueLike/Public/Projectiles",
 			// "ActionRogueLike/Public/UI",

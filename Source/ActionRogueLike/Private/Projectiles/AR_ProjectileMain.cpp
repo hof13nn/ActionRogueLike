@@ -2,6 +2,8 @@
 
 
 #include "AR_ProjectileMain.h"
+
+#include "AR_Damageable.h"
 #include "AR_StringLibrary.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -42,6 +44,7 @@ void AAR_ProjectileMain::PostInitializeComponents()
 	if (BoxComponent)
 	{
 		BoxComponent -> OnComponentHit.AddDynamic(this, &ThisClass::OnHit);
+		BoxComponent -> OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnOverlap);
 	}
 
 	if (ParticleSystem)
@@ -65,10 +68,36 @@ void AAR_ProjectileMain::PostInitializeComponents()
 void AAR_ProjectileMain::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                                    UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (Explosion)
+	if (ensure(OtherActor) && OtherActor != GetOwner())
 	{
-		if (UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation()))
+		if (OtherActor -> Implements<UAR_Damageable>())
 		{
+			IAR_Damageable::Execute_DecreaseHealth(OtherActor, 10.f);
+
+			if (ensure(Explosion))
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation());
+			}
+			
+			Destroy();
+		}
+	}
+}
+
+void AAR_ProjectileMain::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (ensure(OtherActor) && OtherActor != GetOwner())
+	{
+		if (OtherActor -> Implements<UAR_Damageable>())
+		{
+			IAR_Damageable::Execute_DecreaseHealth(OtherActor, 10.f);
+
+			if (ensure(Explosion))
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation());
+			}
+			
 			Destroy();
 		}
 	}

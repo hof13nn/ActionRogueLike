@@ -25,4 +25,5 @@ bool UAR_AttributeComponent::DecreaseHealth(const float& Amount)
 
 void UAR_AttributeComponent::IncreaseHealth()
 {
+	
 }
