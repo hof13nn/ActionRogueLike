@@ -24,4 +24,10 @@ class ACTIONROGUELIKE_API IAR_Damageable
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void DecreaseHealth(const float& Amount);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void IncreaseHealth(const float& Amount);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool GetNeedHealth();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool GetIsAlive();
 };

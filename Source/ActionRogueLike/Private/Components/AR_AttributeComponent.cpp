@@ -20,10 +20,21 @@ bool UAR_AttributeComponent::DecreaseHealth(const float& Amount)
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
 
 	OnHealthChanged.Broadcast(nullptr, this, CurrentHealth, CurrentHealth / MaxHealth);
-	return true;
+	return GetIsAlive();
 }
 
-void UAR_AttributeComponent::IncreaseHealth()
+void UAR_AttributeComponent::IncreaseHealth(const float& Amount)
 {
-	
+	CurrentHealth = FMath::Min(MaxHealth, CurrentHealth + Amount);
+	OnHealthChanged.Broadcast(nullptr, this, CurrentHealth, CurrentHealth / MaxHealth);
+}
+
+bool UAR_AttributeComponent::GetNeedHealth()
+{
+	return CurrentHealth < MaxHealth;
+}
+
+bool UAR_AttributeComponent::GetIsAlive() const
+{
+	return CurrentHealth > 0.f;
 }

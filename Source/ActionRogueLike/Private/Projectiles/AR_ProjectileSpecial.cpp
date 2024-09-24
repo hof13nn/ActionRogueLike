@@ -24,20 +24,20 @@ void AAR_ProjectileSpecial::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetWorld())
-	{
-		GetWorld() -> GetTimerManager().SetTimer(ImpulseTimerHandle, [&]{ RadialForceComponent -> FireImpulse(); }, .25f, true);
-	}
+	// if (GetWorld())
+	// {
+	// 	GetWorld() -> GetTimerManager().SetTimer(ImpulseTimerHandle, [&]{ RadialForceComponent -> FireImpulse(); }, .25f, true);
+	// }
 }
 
 void AAR_ProjectileSpecial::BeginDestroy()
 {
 	Super::BeginDestroy();
 	
-	if (GetWorld())
-	{
-		GetWorld() -> GetTimerManager().ClearTimer(ImpulseTimerHandle);
-	}
+	// if (GetWorld())
+	// {
+	// 	GetWorld() -> GetTimerManager().ClearTimer(ImpulseTimerHandle);
+	// }
 }
 
 void AAR_ProjectileSpecial::PostInitializeComponents()
@@ -76,7 +76,8 @@ void AAR_ProjectileSpecial::SetupComponents()
 		{
 			RadialForceComponent -> Radius = 650.f;
 			RadialForceComponent -> Falloff = RIF_Constant;
-			RadialForceComponent -> ImpulseStrength = -1800.f;
+			RadialForceComponent -> ImpulseStrength = 1000.f;
+			RadialForceComponent -> ForceStrength = -25000.f;
 			RadialForceComponent -> bImpulseVelChange = true;
 			RadialForceComponent -> SetAutoActivate(true);
 			RadialForceComponent -> AddCollisionChannelToAffect(ECC_WorldDynamic);

@@ -73,7 +73,7 @@ void AAR_ProjectilePortal::OnHit(UPrimitiveComponent* HitComponent, AActor* Othe
 
 void AAR_ProjectilePortal::ScheduleTeleportTimer()
 {
-	if (Explosion)
+	if (ensure(Explosion))
 	{
 		if (UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Explosion, GetActorLocation()))
 		{
@@ -83,6 +83,7 @@ void AAR_ProjectilePortal::ScheduleTeleportTimer()
 
 				if (GetWorld())
 				{
+					GetWorld() -> GetTimerManager().ClearTimer(LifespanTimerHandle);
 					GetWorld() -> GetTimerManager().SetTimer(TeleportTimerHandle, this, &ThisClass::Teleport, 0.3f);
 				}
 			}
@@ -92,9 +93,9 @@ void AAR_ProjectilePortal::ScheduleTeleportTimer()
 
 void AAR_ProjectilePortal::Teleport()
 {
-	if (GetOwner())
+	if (ensure(GetOwner()))
 	{
-		GetOwner() -> SetActorLocation(GetActorLocation());
+		GetOwner() -> TeleportTo(GetActorLocation(), GetOwner() -> GetActorRotation());
 		Destroy();
 	}
 }

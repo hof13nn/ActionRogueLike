@@ -2,7 +2,7 @@
 
 
 #include "AR_Character.h"
-
+#include "Particles/ParticleSystemComponent.h"
 #include "AR_AttributeComponent.h"
 #include "AR_InputConfig.h"
 #include "AR_PlayerController.h"
@@ -15,8 +15,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Components/AR_InteractionComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -110,8 +112,47 @@ void AAR_Character::DecreaseHealth_Implementation(const float& Amount)
 {
 	if (ensure(AttributeComponent))
 	{
-		AttributeComponent -> DecreaseHealth(Amount);
+		if (!AttributeComponent -> DecreaseHealth(Amount))
+		{
+			if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+			{
+				DisableInput(PlayerController);
+
+				if (ensure(GetCapsuleComponent()))
+				{
+					GetCapsuleComponent() -> SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				}
+			}
+		}
 	}
+}
+
+void AAR_Character::IncreaseHealth_Implementation(const float& Amount)
+{
+	if (ensure(AttributeComponent))
+	{
+		AttributeComponent -> IncreaseHealth(Amount);
+	}
+}
+
+bool AAR_Character::GetNeedHealth_Implementation()
+{
+	if (ensure(AttributeComponent))
+	{
+		return AttributeComponent -> GetNeedHealth();
+	}
+
+	return false;
+}
+
+bool AAR_Character::GetIsAlive_Implementation()
+{
+	if (ensure(AttributeComponent))
+	{
+		return AttributeComponent -> GetIsAlive();
+	}
+
+	return false;
 }
 
 void AAR_Character::SetupInput(const AAR_PlayerController* PlayerController)
@@ -304,6 +345,13 @@ void AAR_Character::SpawnMainProjectile()
 			{
 				UE_LOG(LogTemp, Error, TEXT("AAR_Character::SpawnProjectile: Couldn't spawn Projectile"));
 			}
+			else
+			{
+				if (UParticleSystem* Cast = LoadObject<UParticleSystem>(this, *FPathLibrary::ProjectileMainCastPath))
+				{
+					UGameplayStatics::SpawnEmitterAttached(Cast, GetMesh(), FSocketLibrary::CharacterProjectileSpawnSocket);
+				}
+			}
 		}
 	}
 }
@@ -365,11 +413,11 @@ FRotator AAR_Character::CalculateRotation(const FVector& SpawnLocation) const
 		QueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
 		
 		const FVector StartLocation = CameraComponent -> GetComponentLocation();
-		const FVector EndLocation = CameraComponent -> GetForwardVector() * 200000.f;
+		const FVector EndLocation = CameraComponent -> GetForwardVector() * 5000.f;
 		
 		const bool bIsHit = GetWorld() -> LineTraceSingleByObjectType(HitResult, StartLocation, EndLocation, QueryParams);
 		DrawDebugLine(GetWorld(), StartLocation, EndLocation, bIsHit ? FColor::Green : FColor::Red, false, 2.f, 0.f, 2.f);
-		return bIsHit ? UKismetMathLibrary::FindLookAtRotation(SpawnLocation, HitResult.Location) : UKismetMathLibrary::FindLookAtRotation(SpawnLocation, EndLocation);
+		return UKismetMathLibrary::FindLookAtRotation(SpawnLocation, EndLocation);
 	}
 
 	return FRotator::ZeroRotator;

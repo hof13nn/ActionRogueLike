@@ -3,6 +3,7 @@
 
 #include "AR_ProjectileBase.h"
 #include "AR_StringLibrary.h"
+#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -23,7 +24,7 @@ void AAR_ProjectileBase::SetupComponents()
 	{
 		BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 
-		if (BoxComponent)
+		if (ensure(BoxComponent))
 		{
 			BoxComponent -> SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			BoxComponent -> SetSimulatePhysics(false);
@@ -39,7 +40,7 @@ void AAR_ProjectileBase::SetupComponents()
 	{
 		MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
 
-		if (MovementComponent)
+		if (ensure(MovementComponent))
 		{
 			MovementComponent -> bRotationFollowsVelocity = true;
 			MovementComponent -> bInitialVelocityInLocalSpace = true;
@@ -51,9 +52,20 @@ void AAR_ProjectileBase::SetupComponents()
 	{
 		ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle System Component"));
 
-		if (ParticleSystem)
+		if (ensure(ParticleSystem))
 		{
 			ParticleSystem -> SetupAttachment(RootComponent);
+		}
+	}
+
+	if (!AudioComponent)
+	{
+		AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Component"));
+
+		if (ensure(AudioComponent))
+		{
+			AudioComponent -> SetAutoActivate(true);
+			AddOwnedComponent(AudioComponent);
 		}
 	}
 }

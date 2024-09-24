@@ -46,7 +46,10 @@ protected:
 public:
 	void SetupInput(const AAR_PlayerController* PlayerController);
 	virtual void Tick(float DeltaTime) override;
-	void DecreaseHealth_Implementation(const float& Amount) override;
+	virtual void DecreaseHealth_Implementation(const float& Amount) override;
+	virtual void IncreaseHealth_Implementation(const float& Amount) override;
+	virtual bool GetNeedHealth_Implementation() override;
+	virtual bool GetIsAlive_Implementation() override;
 private:
 	UPROPERTY(EditAnywhere)
 	USpringArmComponent* SpringArmComponent;

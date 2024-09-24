@@ -58,12 +58,16 @@ public:
 
 	//Objects
 	inline static const FString ProjectileMainPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_Projectile.P_Gideon_Primary_Projectile");
+	inline static const FString ProjectileMainCastPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_MuzzleFlash.P_Gideon_Primary_MuzzleFlash");
 	inline static const FString ProjectileMainExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_HitWorld.P_Gideon_Primary_HitWorld");
+	inline static const FString ProjectileMainSoundPath = TEXT("/Game/BPs/Audio/SC_ProjectileMain.SC_ProjectileMain");
+	inline static const FString ProjectileMainHitSoundPath = TEXT("/Game/BPs/Audio/SC_ProjectileMain_Impact.SC_ProjectileMain_Impact");
+	inline static const FString ProjectileMainCameraShakePath = TEXT("/Game/ExampleContent/CameraShake/CamShake_TakeDamage.CamShake_TakeDamage_C");
 	inline static const FString ProjectileSpecialPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Ultimate/FX/P_Gideon_Ultimate.P_Gideon_Ultimate");
 	inline static const FString ProjectileSpecialExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_HitWorld.P_Gideon_Primary_HitWorld");
 	inline static const FString ProjectileTeleportPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Portal/FX/P_Portal_Cast.P_Portal_Cast");
 	inline static const FString ProjectileTeleportExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Portal/FX/P_Portal_Entrance_Close.P_Portal_Entrance_Close");
-
+	
 	//UI
 	inline static const FString PlayerHUDPath = TEXT("/Game/BPs/UI/Player/WBP_Player_HUD.WBP_Player_HUD_C");
 	inline static const FString UnselectedWeaponPanelPath = TEXT("/Game/BPs/UI/Player/Objects/WBP_UnselectedWeaponPanel.WBP_UnselectedWeaponPanel_C");

@@ -19,8 +19,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool DecreaseHealth(const float& Amount);
-	void IncreaseHealth();
-
+	void IncreaseHealth(const float& Amount);
+	UFUNCTION(BlueprintCallable)
+	bool GetNeedHealth();
+	UFUNCTION(BlueprintCallable)
+	bool GetIsAlive() const;
+	
 private:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Attributes")

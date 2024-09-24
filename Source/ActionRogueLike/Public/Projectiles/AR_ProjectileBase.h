@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AR_ProjectileBase.generated.h"
 
-class UParticleEmitter;
+class USoundCue;
 class UProjectileMovementComponent;
 class UBoxComponent;
 
@@ -33,6 +33,10 @@ protected:
 	UParticleSystemComponent* ParticleSystem;
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystem* Explosion;
+	UPROPERTY(VisibleAnywhere)
+	UAudioComponent* AudioComponent;
+	UPROPERTY(VisibleAnywhere)
+	USoundCue* HitSound;
 	UPROPERTY(VisibleAnywhere)
 	FVector CachedLaunchPosition;
 };
