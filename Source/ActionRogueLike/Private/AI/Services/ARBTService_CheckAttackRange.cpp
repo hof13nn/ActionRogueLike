@@ -28,10 +28,7 @@ void UARBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, 
 				{
 					float Distance = FVector::Distance(TargetActor -> GetActorLocation(), AIPawn -> GetActorLocation());
 
-					if (Distance < DistanceThreshold)
-					{
-						BlackboardComponent -> SetValueAsBool(AttackRangeKey.SelectedKeyName, Distance < DistanceThreshold && AIController -> LineOfSightTo(TargetActor));
-					}
+					BlackboardComponent -> SetValueAsBool(AttackRangeKey.SelectedKeyName, Distance < DistanceThreshold && AIController -> LineOfSightTo(TargetActor));
 				}
 			}
 		}

@@ -34,6 +34,9 @@ public:
 	inline static FName CharacterHeadSocket = TEXT("HeadSocket");
 	inline static FName WeaponProjectileSpawn = TEXT("ProjectileSpawn");
 	inline static FName WeaponEjectableMeshSpawn = TEXT("EjectableMeshSpawn");
+
+	//Minion
+	inline static const FName MinionMuzzleSocket = TEXT("Muzzle_01"); 
 };
 
 
@@ -86,5 +89,6 @@ public:
 class ACTIONROGUELIKE_API FAIKeyLibrary
 {
 public:
+	inline static const FString RMinionMoveToLoc = TEXT("MoveToLoc");
 	inline static const FString RMinionTargetActor = TEXT("TargetActor");
 };

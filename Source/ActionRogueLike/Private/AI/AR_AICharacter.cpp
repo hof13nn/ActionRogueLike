@@ -3,23 +3,58 @@
 
 #include "AR_AICharacter.h"
 
+#include "AIController.h"
+#include "AR_StringLibrary.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Perception/PawnSensingComponent.h"
+
 
 // Sets default values
 AAR_AICharacter::AAR_AICharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+
+	SetupComponents();
 }
 
-// Called when the game starts or when spawned
-void AAR_AICharacter::BeginPlay()
+void AAR_AICharacter::PostInitializeComponents()
 {
-	Super::BeginPlay();
-	
+	Super::PostInitializeComponents();
+
+	if (ensure(PawnSensingComponent))
+	{
+		PawnSensingComponent -> OnSeePawn.AddDynamic(this, &ThisClass::OnSeePawn);
+	}
 }
 
-// Called every frame
-void AAR_AICharacter::Tick(float DeltaTime)
+void AAR_AICharacter::SetupComponents()
 {
-	Super::Tick(DeltaTime);
+	if (!PawnSensingComponent)
+	{
+		PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Sensing Component"));
+
+		if (ensure(PawnSensingComponent))
+		{
+
+			AddOwnedComponent(PawnSensingComponent);
+		}
+	}
+}
+
+void AAR_AICharacter::OnSeePawn(APawn* Pawn)
+{
+	AAIController* AIController = Cast<AAIController>(GetController());
+
+	if (ensure(AIController))
+	{
+		UBlackboardComponent* BlackboardComponent = AIController -> GetBlackboardComponent();
+
+		if (ensure(BlackboardComponent))
+		{
+			BlackboardComponent -> SetValueAsObject(*FAIKeyLibrary::RMinionTargetActor, Pawn);
+
+			DrawDebugString(GetWorld(), GetActorLocation(), TEXT("Player Spotted"), nullptr, FColor::Green, 4.f, true);
+		}
+	}
 }
