@@ -8,12 +8,15 @@ public class ActionRogueLike : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule", "GameplayTasks" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
 		PublicIncludePaths.AddRange(new string[]
 		{
+			"ActionRogueLike/Public/AI",
+			"ActionRogueLike/Public/AI/Tasks",
+			"ActionRogueLike/Public/AI/Services",
 			// "ActionRogueLike/Public/Base",
 			// "ActionRogueLike/Public/Base/Actors",
 			// "ActionRogueLike/Public/Base/Components",

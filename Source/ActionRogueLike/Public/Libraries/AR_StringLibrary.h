@@ -62,12 +62,15 @@ public:
 	inline static const FString ProjectileMainExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_HitWorld.P_Gideon_Primary_HitWorld");
 	inline static const FString ProjectileMainSoundPath = TEXT("/Game/BPs/Audio/SC_ProjectileMain.SC_ProjectileMain");
 	inline static const FString ProjectileMainHitSoundPath = TEXT("/Game/BPs/Audio/SC_ProjectileMain_Impact.SC_ProjectileMain_Impact");
-	inline static const FString ProjectileMainCameraShakePath = TEXT("/Game/ExampleContent/CameraShake/CamShake_TakeDamage.CamShake_TakeDamage_C");
+	inline static const FString ProjectileMainCameraShakePath = TEXT("/Game/ExampleContent/CameraShake/CamShake_TakeDamage_Small.CamShake_TakeDamage_Small_C");
 	inline static const FString ProjectileSpecialPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Ultimate/FX/P_Gideon_Ultimate.P_Gideon_Ultimate");
 	inline static const FString ProjectileSpecialExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Primary/FX/P_Gideon_Primary_HitWorld.P_Gideon_Primary_HitWorld");
 	inline static const FString ProjectileTeleportPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Portal/FX/P_Portal_Cast.P_Portal_Cast");
 	inline static const FString ProjectileTeleportExplosionPath = TEXT("/Game/ParagonGideon/FX/Particles/Gideon/Abilities/Portal/FX/P_Portal_Entrance_Close.P_Portal_Entrance_Close");
-	
+
+	//AI
+	inline static const FString RMinionBTPath = TEXT("/Game/BPs/AI/BT_Minion_Ranged_01.BT_Minion_Ranged_01");
+
 	//UI
 	inline static const FString PlayerHUDPath = TEXT("/Game/BPs/UI/Player/WBP_Player_HUD.WBP_Player_HUD_C");
 	inline static const FString UnselectedWeaponPanelPath = TEXT("/Game/BPs/UI/Player/Objects/WBP_UnselectedWeaponPanel.WBP_UnselectedWeaponPanel_C");
@@ -78,4 +81,10 @@ public:
 	//Materials
 	inline static const FString BloodPhyMaterialPath = TEXT("/Game/Assets/Environment/PhysMaterials/PM_Blood.PM_Blood");
 	inline static const FString ShieldPhyMaterialPath = TEXT("/Game/Assets/Environment/PhysMaterials/PM_Shield.PM_Shield");
+};
+
+class ACTIONROGUELIKE_API FAIKeyLibrary
+{
+public:
+	inline static const FString RMinionTargetActor = TEXT("TargetActor");
 };

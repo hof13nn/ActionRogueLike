@@ -50,6 +50,8 @@ public:
 	virtual void IncreaseHealth_Implementation(const float& Amount) override;
 	virtual bool GetNeedHealth_Implementation() override;
 	virtual bool GetIsAlive_Implementation() override;
+	TWeakObjectPtr<UCameraComponent> GetCameraComponent() const;
+	
 private:
 	UPROPERTY(EditAnywhere)
 	USpringArmComponent* SpringArmComponent;

@@ -155,6 +155,11 @@ bool AAR_Character::GetIsAlive_Implementation()
 	return false;
 }
 
+TWeakObjectPtr<UCameraComponent> AAR_Character::GetCameraComponent() const
+{
+	return TWeakObjectPtr<UCameraComponent>(CameraComponent);
+}
+
 void AAR_Character::SetupInput(const AAR_PlayerController* PlayerController)
 {
 	if (UAR_InputConfig* InputConfig = LoadObject<UAR_InputConfig>(this, *FPathLibrary::InputConfigPath))
@@ -413,11 +418,11 @@ FRotator AAR_Character::CalculateRotation(const FVector& SpawnLocation) const
 		QueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
 		
 		const FVector StartLocation = CameraComponent -> GetComponentLocation();
-		const FVector EndLocation = CameraComponent -> GetForwardVector() * 5000.f;
+		const FVector EndLocation = StartLocation + (CameraComponent -> GetForwardVector() * 5000.f);
 		
 		const bool bIsHit = GetWorld() -> LineTraceSingleByObjectType(HitResult, StartLocation, EndLocation, QueryParams);
 		DrawDebugLine(GetWorld(), StartLocation, EndLocation, bIsHit ? FColor::Green : FColor::Red, false, 2.f, 0.f, 2.f);
-		return UKismetMathLibrary::FindLookAtRotation(SpawnLocation, EndLocation);
+		return UKismetMathLibrary::FindLookAtRotation(SpawnLocation, bIsHit ? HitResult.Location : EndLocation);
 	}
 
 	return FRotator::ZeroRotator;
