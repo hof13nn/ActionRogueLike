@@ -50,6 +50,8 @@ void AAR_AICharacter::SetupComponents()
 			AddOwnedComponent(AttributeComponent);
 		}
 	}
+
+	AutoPossessAI = EAutoPossessAI::Spawned;
 }
 
 void AAR_AICharacter::OnSeePawn(APawn* Pawn)

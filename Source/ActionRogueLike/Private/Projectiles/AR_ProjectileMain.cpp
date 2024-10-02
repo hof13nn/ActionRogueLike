@@ -20,7 +20,7 @@ AAR_ProjectileMain::AAR_ProjectileMain()
 
 	AAR_ProjectileMain::SetupComponents();
 
-	Damage = 75.f;
+	Damage = 15.f;
 }
 
 
