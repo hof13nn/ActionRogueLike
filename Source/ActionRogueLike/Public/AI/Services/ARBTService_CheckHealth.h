@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTService.h"
-#include "ARBTService_CheckAttackRange.generated.h"
+#include "ARBTService_CheckHealth.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ACTIONROGUELIKE_API UARBTService_CheckAttackRange : public UBTService
+class ACTIONROGUELIKE_API UARBTService_CheckHealth : public UBTService
 {
 	GENERATED_BODY()
 
@@ -19,9 +19,5 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere, Category=AI)
-	FBlackboardKeySelector TargetActorKey;
-	UPROPERTY(EditAnywhere, Category=AI)
-	FBlackboardKeySelector AttackRangeKey;
-	UPROPERTY(EditAnywhere, Category=AI)
-	float DistanceThreshold;
+	FBlackboardKeySelector LowHealthKey;
 };

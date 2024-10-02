@@ -1,9 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ARBTService_CheckAttackRange.h"
-
 #include "AR_AIController.h"
-#include "AR_StringLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 void UARBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -14,9 +12,7 @@ void UARBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, 
 
 	if (ensure(BlackboardComponent))
 	{
-		AActor* TargetActor = Cast<AActor>(BlackboardComponent -> GetValueAsObject(*FAIKeyLibrary::RMinionTargetActor));
-
-		if (ensure(TargetActor))
+		if (AActor* TargetActor = Cast<AActor>(BlackboardComponent -> GetValueAsObject(TargetActorKey.SelectedKeyName)))
 		{
 			AAIController* AIController = OwnerComp.GetAIOwner();
 

@@ -11,7 +11,6 @@ AAR_HealthPotion::AAR_HealthPotion()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	bIsInteractable = true;
 	HealthAmount = 10.f;
 }
 
@@ -24,7 +23,7 @@ void AAR_HealthPotion::BeginPlay()
 
 void AAR_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
-	if (bIsInteractable && ensure(InstigatorPawn))
+	if (ensure(InstigatorPawn))
 	{
 		if (InstigatorPawn -> Implements<UAR_Damageable>())
 		{
@@ -45,7 +44,11 @@ void AAR_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 
 void AAR_HealthPotion::SetActive(const bool& Value)
 {
-	bIsInteractable = Value;
-	SetActorHiddenInGame(!Value);
+	SetActorEnableCollision(Value);
+
+	if (ensure(RootComponent))
+	{
+		RootComponent -> SetVisibility(Value, true);
+	}
 }
 

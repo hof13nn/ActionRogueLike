@@ -20,10 +20,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool DecreaseHealth(const float& Amount);
 	void IncreaseHealth(const float& Amount);
+	void RestoreHealth();
 	UFUNCTION(BlueprintCallable)
 	bool GetNeedHealth();
 	UFUNCTION(BlueprintCallable)
+	bool GetIsLowHealth();
+	UFUNCTION(BlueprintCallable)
 	bool GetIsAlive() const;
+	float GetCurrentHealth();
 	
 private:
 protected:

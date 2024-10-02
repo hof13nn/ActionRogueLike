@@ -4,6 +4,7 @@
 #include "AR_AICharacter.h"
 
 #include "AIController.h"
+#include "AR_AttributeComponent.h"
 #include "AR_StringLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/PawnSensingComponent.h"
@@ -36,8 +37,17 @@ void AAR_AICharacter::SetupComponents()
 
 		if (ensure(PawnSensingComponent))
 		{
-
 			AddOwnedComponent(PawnSensingComponent);
+		}
+	}
+
+	if (!AttributeComponent)
+	{
+		AttributeComponent = CreateDefaultSubobject<UAR_AttributeComponent>(TEXT("Attribute Component"));
+
+		if (ensure(AttributeComponent))
+		{
+			AddOwnedComponent(AttributeComponent);
 		}
 	}
 }
@@ -54,7 +64,49 @@ void AAR_AICharacter::OnSeePawn(APawn* Pawn)
 		{
 			BlackboardComponent -> SetValueAsObject(*FAIKeyLibrary::RMinionTargetActor, Pawn);
 
-			DrawDebugString(GetWorld(), GetActorLocation(), TEXT("Player Spotted"), nullptr, FColor::Green, 4.f, true);
+			DrawDebugString(GetWorld(), GetActorLocation(), TEXT("Player Spotted"), nullptr, FColor::Green, 2.f, true);
 		}
 	}
+}
+
+void AAR_AICharacter::DecreaseHealth_Implementation(const float& Amount)
+{
+	if (ensure(AttributeComponent))
+	{
+		AttributeComponent -> DecreaseHealth(Amount);
+
+		FString CurrentHealth = FString::Printf(TEXT("Health's been resored. Current Health: %f"), AttributeComponent -> GetCurrentHealth());
+		
+		DrawDebugString(GetWorld(), GetActorLocation(), CurrentHealth, nullptr, FColor::Green, 4.f, true);
+	}
+}
+
+void AAR_AICharacter::IncreaseHealth_Implementation(const float& Amount)
+{
+	if (ensure(AttributeComponent))
+	{
+		AttributeComponent -> IncreaseHealth(Amount);
+	}
+}
+
+void AAR_AICharacter::RestoreHealth_Implementation()
+{
+	if (ensure(AttributeComponent))
+	{
+		AttributeComponent -> RestoreHealth();
+
+		FString CurrentHealth = FString::Printf(TEXT("Health's been resored. Current Health: %f"), AttributeComponent -> GetCurrentHealth());
+		
+		DrawDebugString(GetWorld(), GetActorLocation(), CurrentHealth, nullptr, FColor::Green, 4.f, true);
+	}
+}
+
+bool AAR_AICharacter::GetIsLowHealth_Implementation()
+{
+	if (ensure(AttributeComponent))
+	{
+		return  AttributeComponent -> GetIsLowHealth();
+	}
+
+	return false;
 }

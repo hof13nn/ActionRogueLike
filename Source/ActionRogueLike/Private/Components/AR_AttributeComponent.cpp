@@ -29,12 +29,27 @@ void UAR_AttributeComponent::IncreaseHealth(const float& Amount)
 	OnHealthChanged.Broadcast(nullptr, this, CurrentHealth, CurrentHealth / MaxHealth);
 }
 
+void UAR_AttributeComponent::RestoreHealth()
+{
+	CurrentHealth = MaxHealth;
+}
+
 bool UAR_AttributeComponent::GetNeedHealth()
 {
 	return CurrentHealth < MaxHealth;
 }
 
+bool UAR_AttributeComponent::GetIsLowHealth()
+{
+	return CurrentHealth / MaxHealth <= 0.3f;
+}
+
 bool UAR_AttributeComponent::GetIsAlive() const
 {
 	return CurrentHealth > 0.f;
+}
+
+float UAR_AttributeComponent::GetCurrentHealth()
+{
+	return CurrentHealth;
 }

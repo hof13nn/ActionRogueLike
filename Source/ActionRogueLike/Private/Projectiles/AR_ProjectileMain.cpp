@@ -20,7 +20,7 @@ AAR_ProjectileMain::AAR_ProjectileMain()
 
 	AAR_ProjectileMain::SetupComponents();
 
-	Damage = 10.f;
+	Damage = 75.f;
 }
 
 
@@ -125,7 +125,7 @@ void AAR_ProjectileMain::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			if (TSubclassOf<UCameraShakeBase> CameraShakeBase = LoadClass<UCameraShakeBase>(this, *FPathLibrary::ProjectileMainCameraShakePath))
 			{
 				UGameplayStatics::PlayWorldCameraShake(GetWorld(), CameraShakeBase, GetActorLocation(), 0.f, 800.f);
-				DrawDebugSphere(GetWorld(), GetActorLocation(), 800.f, 15, FColor::Red, true, 3.f);
+				//DrawDebugSphere(GetWorld(), GetActorLocation(), 800.f, 15, FColor::Red, true, 3.f);
 			}
 		}
 		

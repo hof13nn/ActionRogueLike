@@ -21,7 +21,6 @@ protected:
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 	void SetActive(const bool& Value);
 private:
-	bool bIsInteractable;
 	UPROPERTY(VisibleAnywhere)
 	float HealthAmount;
 	FTimerHandle InteractionDelayTimerHandle;
