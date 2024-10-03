@@ -24,8 +24,6 @@ void UARBTService_CheckHealth::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 			if (ensure(AIPawn))
 			{
 				FString Value = IAR_Damageable::Execute_GetIsLowHealth(AIPawn) ? TEXT("True") : TEXT("False");
-		
-				UE_LOG(LogTemp, Warning, TEXT("UARBTService_CheckHealth::TickNode: Is Health Law: %s"), *Value);
 				
 				BlackboardComponent -> SetValueAsBool(LowHealthKey.SelectedKeyName, IAR_Damageable::Execute_GetIsLowHealth(AIPawn));
 			}

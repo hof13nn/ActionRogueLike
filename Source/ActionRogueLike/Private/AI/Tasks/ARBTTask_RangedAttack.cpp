@@ -3,11 +3,18 @@
 
 #include "ARBTTask_RangedAttack.h"
 #include "AIController.h"
+#include "AR_Damageable.h"
 #include "AR_ProjectileMain.h"
 #include "AR_StringLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/KismetMathLibrary.h"
+
+UARBTTask_RangedAttack::UARBTTask_RangedAttack()
+{
+	MaxProjectileSpreadPitch = 2.f;
+	MaxProjectileSpreadYaw = 2.f;
+}
 
 EBTNodeResult::Type UARBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -20,9 +27,9 @@ EBTNodeResult::Type UARBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& 
 		if (ensure(AIPawn))
 		{
 			const FVector MuzzleLoc = AIPawn -> GetMesh() -> GetSocketLocation(FSocketLibrary::MinionMuzzleSocket);
-			const AActor* TargetActor = Cast<AActor>(OwnerComp.GetBlackboardComponent() -> GetValueAsObject(*FAIKeyLibrary::RMinionTargetActor));
+			AActor* TargetActor = Cast<AActor>(OwnerComp.GetBlackboardComponent() -> GetValueAsObject(*FAIKeyLibrary::RMinionTargetActor));
 
-			if (ensure(TargetActor))
+			if (TargetActor && IAR_Damageable::Execute_GetIsAlive(TargetActor))
 			{
 				FActorSpawnParameters ActorSpawnParameters;
 				ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -30,14 +37,21 @@ EBTNodeResult::Type UARBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& 
 				ActorSpawnParameters.Instigator = AIPawn;
 
 				//const FVector Direction = UKismetMathLibrary::FindLookAtRotation(MuzzleLoc, TargetActor -> GetActorLocation());
-				const FRotator MuzzleRot = UKismetMathLibrary::FindLookAtRotation(MuzzleLoc, TargetActor -> GetActorLocation());
+				FRotator MuzzleRot = UKismetMathLibrary::FindLookAtRotation(MuzzleLoc, TargetActor -> GetActorLocation());
+				MuzzleRot.Pitch += FMath::RandRange(0.f, MaxProjectileSpreadPitch);
+				MuzzleRot.Yaw += FMath::RandRange(-MaxProjectileSpreadYaw, MaxProjectileSpreadYaw);
 				const FTransform Transform = FTransform(MuzzleRot, MuzzleLoc);
-				
-				if (GetWorld() -> SpawnActor<AAR_ProjectileMain>(AAR_ProjectileMain::StaticClass(), Transform, ActorSpawnParameters))
-				{
-					return EBTNodeResult::Succeeded;
-				}
 
+				if (ensureMsgf(ProjectileClass, TEXT("UARBTTask_RangedAttack::ExecuteTask: ProjectileClass is NULL")))
+				{
+					if (GetWorld() -> SpawnActor<AActor>(ProjectileClass, Transform, ActorSpawnParameters))
+					{
+						return EBTNodeResult::Succeeded;
+					}
+
+					return EBTNodeResult::Failed;
+				}
+				
 				return EBTNodeResult::Failed;
 			}
 

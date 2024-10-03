@@ -65,7 +65,7 @@ void AAR_ProjectileBase::SetupComponents()
 		if (ensure(AudioComponent))
 		{
 			AudioComponent -> SetAutoActivate(true);
-			AddOwnedComponent(AudioComponent);
+			AudioComponent -> SetupAttachment(RootComponent);
 		}
 	}
 }

@@ -36,6 +36,8 @@ AAR_Character::AAR_Character()
 	
 	SetupCameraComponents();
 	SetupComponents();
+
+	Tags.Emplace(FTagLibrary::PlayerTag);
 }
 
 void AAR_Character::SetupCameraComponents()
@@ -102,16 +104,15 @@ void AAR_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-// Called every frame
-void AAR_Character::Tick(float DeltaTime)
+float AAR_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
 {
-	Super::Tick(DeltaTime);
-}
+	float Amount =  Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-void AAR_Character::DecreaseHealth_Implementation(const float& Amount)
-{
 	if (ensure(AttributeComponent))
 	{
+		GetMesh() -> SetScalarParameterValueOnMaterials("TimeToHit", GetWorld() -> GetTimeSeconds());
+		
 		if (!AttributeComponent -> DecreaseHealth(Amount))
 		{
 			if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
@@ -125,6 +126,19 @@ void AAR_Character::DecreaseHealth_Implementation(const float& Amount)
 			}
 		}
 	}
+
+	return Amount;
+}
+
+// Called every frame
+void AAR_Character::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void AAR_Character::DecreaseHealth_Implementation(const float& Amount)
+{
+	
 }
 
 void AAR_Character::IncreaseHealth_Implementation(const float& Amount)

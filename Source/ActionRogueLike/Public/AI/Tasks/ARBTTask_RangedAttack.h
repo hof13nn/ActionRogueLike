@@ -6,6 +6,7 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "ARBTTask_RangedAttack.generated.h"
 
+class AAR_ProjectileBase;
 /**
  * 
  */
@@ -14,6 +15,16 @@ class ACTIONROGUELIKE_API UARBTTask_RangedAttack : public UBTTaskNode
 {
 	GENERATED_BODY()
 
+	UARBTTask_RangedAttack();
+	
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+
+private:
+	UPROPERTY(EditAnywhere, Category= AI)
+	TSubclassOf<AAR_ProjectileBase> ProjectileClass;
+	UPROPERTY(EditAnywhere, Category= AI)
+	float MaxProjectileSpreadPitch;
+	UPROPERTY(EditAnywhere, Category= AI)
+	float MaxProjectileSpreadYaw;
 };

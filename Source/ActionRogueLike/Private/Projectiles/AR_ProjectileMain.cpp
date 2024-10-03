@@ -18,9 +18,10 @@ AAR_ProjectileMain::AAR_ProjectileMain()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	AAR_ProjectileMain::SetupComponents();
-
 	Damage = 15.f;
+	ProjectileSpeed = 2500.f;
+	
+	AAR_ProjectileMain::SetupComponents();
 }
 
 
@@ -30,7 +31,7 @@ void AAR_ProjectileMain::SetupComponents()
 
 	if (ensure(MovementComponent))
 	{
-		MovementComponent -> InitialSpeed = 1000.f;
+		MovementComponent -> InitialSpeed = ProjectileSpeed;
 	}
 }
 
@@ -120,7 +121,9 @@ void AAR_ProjectileMain::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		if (OtherActor -> Implements<UAR_Damageable>())
 		{
-			IAR_Damageable::Execute_DecreaseHealth(OtherActor, Damage);
+			UGameplayStatics::ApplyDamage(OtherActor, Damage, nullptr, GetOwner(), nullptr);
+			
+			// IAR_Damageable::Execute_DecreaseHealth(OtherActor, Damage);s
 
 			if (TSubclassOf<UCameraShakeBase> CameraShakeBase = LoadClass<UCameraShakeBase>(this, *FPathLibrary::ProjectileMainCameraShakePath))
 			{

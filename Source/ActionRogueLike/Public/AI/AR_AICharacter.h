@@ -22,12 +22,15 @@ public:
 protected:
 	virtual void PostInitializeComponents() override;
 	void SetupComponents();
+	void SetTarget(AActor* NewTarget);
 	UFUNCTION()
 	void OnSeePawn(APawn* Pawn);
 	virtual void DecreaseHealth_Implementation(const float& Amount) override;
 	virtual void IncreaseHealth_Implementation(const float& Amount) override;
 	virtual void RestoreHealth_Implementation() override;
 	virtual bool GetIsLowHealth_Implementation() override;
+	virtual bool GetIsAlive_Implementation() override;
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 private:
 	UPROPERTY(VisibleAnywhere)
 	UAR_AttributeComponent* AttributeComponent;

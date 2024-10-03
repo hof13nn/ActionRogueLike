@@ -20,6 +20,11 @@ void AAR_GameMode::StartPlay()
 {
 	Super::StartPlay();
 
+	//SetBotSpawnTimer();
+}
+
+void AAR_GameMode::SetBotSpawnTimer()
+{
 	if (GetWorld())
 	{
 		GetWorld() -> GetTimerManager().SetTimer(SpawnBotsTimerHandle, this, &ThisClass::SpawnBots, SpawnTimerInterval, true);
@@ -28,19 +33,20 @@ void AAR_GameMode::StartPlay()
 
 void AAR_GameMode::SpawnBots()
 {
-	if (UEnvQueryInstanceBlueprintWrapper* QueryInstance = UEnvQueryManager::RunEQSQuery(this, SpawnBotQuery, this, EEnvQueryRunMode::RandomBest5Pct, nullptr))
+	if (CountAliveBots())
 	{
-		QueryInstance -> GetOnQueryFinishedEvent().AddDynamic(this, &ThisClass::OnQueryCompleted);
+		if (ensureMsgf(SpawnBotQuery, TEXT("AAR_GameMode::SpawnBots: SpawnBotQuery is NULL")))
+		{
+			if (UEnvQueryInstanceBlueprintWrapper* QueryInstance = UEnvQueryManager::RunEQSQuery(this, SpawnBotQuery, this, EEnvQueryRunMode::RandomBest5Pct, nullptr))
+			{
+				QueryInstance -> GetOnQueryFinishedEvent().AddDynamic(this, &ThisClass::OnQueryCompleted);
+			}
+		}
 	}
 }
 
-void AAR_GameMode::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus)
+bool AAR_GameMode::CountAliveBots()
 {
-	if (QueryStatus != EEnvQueryStatus::Success)
-	{
-		return;
-	}
-
 	int32 NumberOfAliveBots = 0;
 
 	for (TActorIterator<AAR_AICharacter> It(GetWorld()); It; ++It)
@@ -52,23 +58,38 @@ void AAR_GameMode::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInst
 			NumberOfAliveBots++;
 		}
 	}
-		
-	if (NumberOfAliveBots >= MaxNumberOfBots)
-	{
-		return;
-	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Bots Alive: %i, Max Bots: %i"), NumberOfAliveBots, MaxNumberOfBots);
 
 	if (ensureMsgf(DifficultyCurve, TEXT("AAR_GameMode::OnQueryCompleted: DifficultyCurve is NULL")))
 	{
 		MaxNumberOfBots = DifficultyCurve -> GetFloatValue(GetWorld() -> GetTimeSeconds());
-		TArray<FVector> LocationsArr = QueryInstance -> GetResultsAsLocations();
-
-		if (!LocationsArr.IsEmpty())
+		
+		if (NumberOfAliveBots >= MaxNumberOfBots)
 		{
-			if (LocationsArr.IsValidIndex(0) && ensureMsgf(BotClass, TEXT(" AAR_GameMode::OnQueryCompleted: BotClass is NULL")))
-			{
-				GetWorld() -> SpawnActor<AActor>(BotClass, LocationsArr[0], FRotator::ZeroRotator);
-			}
+			return false;
+		}
+
+		return true;
+	}
+	
+	return true;
+}
+
+void AAR_GameMode::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus)
+{
+	if (QueryStatus != EEnvQueryStatus::Success)
+	{
+		return;
+	}
+	
+	TArray<FVector> LocationsArr = QueryInstance -> GetResultsAsLocations();
+
+	if (!LocationsArr.IsEmpty())
+	{
+		if (LocationsArr.IsValidIndex(0) && ensureMsgf(BotClass, TEXT(" AAR_GameMode::OnQueryCompleted: BotClass is NULL")))
+		{
+			GetWorld() -> SpawnActor<AActor>(BotClass, LocationsArr[0], FRotator::ZeroRotator);
 		}
 	}
 }

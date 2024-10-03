@@ -30,4 +30,6 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Damage;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float ProjectileSpeed;
 };

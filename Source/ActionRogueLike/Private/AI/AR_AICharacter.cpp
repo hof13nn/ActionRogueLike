@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "AR_AttributeComponent.h"
 #include "AR_StringLibrary.h"
+#include "BrainComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
@@ -56,31 +57,14 @@ void AAR_AICharacter::SetupComponents()
 
 void AAR_AICharacter::OnSeePawn(APawn* Pawn)
 {
-	AAIController* AIController = Cast<AAIController>(GetController());
-
-	if (ensure(AIController))
+	if (Execute_GetIsAlive(Pawn))
 	{
-		UBlackboardComponent* BlackboardComponent = AIController -> GetBlackboardComponent();
-
-		if (ensure(BlackboardComponent))
-		{
-			BlackboardComponent -> SetValueAsObject(*FAIKeyLibrary::RMinionTargetActor, Pawn);
-
-			DrawDebugString(GetWorld(), GetActorLocation(), TEXT("Player Spotted"), nullptr, FColor::Green, 2.f, true);
-		}
+		SetTarget(Pawn);
 	}
 }
 
 void AAR_AICharacter::DecreaseHealth_Implementation(const float& Amount)
 {
-	if (ensure(AttributeComponent))
-	{
-		AttributeComponent -> DecreaseHealth(Amount);
-
-		FString CurrentHealth = FString::Printf(TEXT("Health's been resored. Current Health: %f"), AttributeComponent -> GetCurrentHealth());
-		
-		DrawDebugString(GetWorld(), GetActorLocation(), CurrentHealth, nullptr, FColor::Green, 4.f, true);
-	}
 }
 
 void AAR_AICharacter::IncreaseHealth_Implementation(const float& Amount)
@@ -111,4 +95,68 @@ bool AAR_AICharacter::GetIsLowHealth_Implementation()
 	}
 
 	return false;
+}
+
+bool AAR_AICharacter::GetIsAlive_Implementation()
+{
+	if (ensure(AttributeComponent))
+	{
+		return AttributeComponent -> GetIsAlive();
+	}
+
+	return false;
+}
+
+float AAR_AICharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	float Amount = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	if (ensure(AttributeComponent))
+	{
+		GetMesh() -> SetScalarParameterValueOnMaterials("TimeToHit", GetWorld() -> GetTimeSeconds());
+		
+		if (!AttributeComponent -> DecreaseHealth(Amount))
+		{
+			AAIController* AIController = Cast<AAIController>(GetController());
+			
+			if (AIController)
+			{
+				AIController -> GetBrainComponent() -> StopLogic(TEXT("Killed"));
+			}
+
+			GetMesh() -> SetAllBodiesSimulatePhysics(true);
+			GetMesh() -> SetCollisionProfileName(TEXT("Ragdoll"));
+		}
+		else
+		{
+			SetTarget(DamageCauser);
+		}
+		
+		FString CurrentHealth = FString::Printf(TEXT("Health's been resored. Current Health: %f"), AttributeComponent -> GetCurrentHealth());
+		
+		DrawDebugString(GetWorld(), GetActorLocation(), CurrentHealth, nullptr, FColor::Green, 1.f, true);
+	}
+	
+	return Amount;
+}
+
+void AAR_AICharacter::SetTarget(AActor* NewTarget)
+{
+	if (ensure(NewTarget))
+	{
+		AAIController* AIController = Cast<AAIController>(GetController());
+
+		if (ensure(AIController))
+		{
+			UBlackboardComponent* BlackboardComponent = AIController -> GetBlackboardComponent();
+
+			if (ensure(BlackboardComponent))
+			{
+				BlackboardComponent -> SetValueAsObject(*FAIKeyLibrary::RMinionTargetActor, NewTarget);
+
+				DrawDebugString(GetWorld(), GetActorLocation(), TEXT("Player Spotted"), nullptr, FColor::Green, 2.f, true);
+			}
+		}
+	}
 }

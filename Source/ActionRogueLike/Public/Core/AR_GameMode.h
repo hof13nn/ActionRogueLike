@@ -22,9 +22,11 @@ class ACTIONROGUELIKE_API AAR_GameMode : public AGameMode
 	GENERATED_BODY()
 
 	AAR_GameMode();
-	
+	void SetBotSpawnTimer();
+
 public:
 	virtual void StartPlay() override;
+	bool CountAliveBots();
 
 protected:
 	void SpawnBots();
