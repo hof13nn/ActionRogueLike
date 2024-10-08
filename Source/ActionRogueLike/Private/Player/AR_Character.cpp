@@ -4,6 +4,7 @@
 #include "AR_Character.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "AR_AttributeComponent.h"
+#include "AR_GameMode.h"
 #include "AR_InputConfig.h"
 #include "AR_PlayerController.h"
 #include "AR_ProjectileBase.h"
@@ -21,6 +22,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
+static TAutoConsoleVariable<bool> CVarDebugDrawProjectilePath(TEXT("su.ProjectilePathDebugDraw"), false, TEXT("Enable Debug Lines for Projectile Path}"), ECVF_Cheat);
 
 // Sets default values
 AAR_Character::AAR_Character()
@@ -109,7 +111,7 @@ float AAR_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 {
 	float Amount =  Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	if (ensure(AttributeComponent))
+	if (CanBeDamaged() && ensure(AttributeComponent))
 	{
 		GetMesh() -> SetScalarParameterValueOnMaterials("TimeToHit", GetWorld() -> GetTimeSeconds());
 		
@@ -123,6 +125,11 @@ float AAR_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 				{
 					GetCapsuleComponent() -> SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				}
+			}
+
+			if (AAR_GameMode* GM = GetWorld() -> GetAuthGameMode<AAR_GameMode>())
+			{
+				GM -> OnActorKilled(this, DamageCauser);
 			}
 		}
 	}
@@ -440,7 +447,12 @@ FRotator AAR_Character::CalculateRotation(const FVector& SpawnLocation) const
 		const FVector EndLocation = StartLocation + (CameraComponent -> GetForwardVector() * 5000.f);
 		
 		const bool bIsHit = GetWorld() -> LineTraceSingleByObjectType(HitResult, StartLocation, EndLocation, QueryParams);
-		DrawDebugLine(GetWorld(), StartLocation, EndLocation, bIsHit ? FColor::Green : FColor::Red, false, 2.f, 0.f, 2.f);
+
+		if (CVarDebugDrawProjectilePath.GetValueOnGameThread())
+		{
+			DrawDebugLine(GetWorld(), StartLocation, EndLocation, bIsHit ? FColor::Green : FColor::Red, false, 2.f, 0.f, 2.f);
+		}
+
 		return UKismetMathLibrary::FindLookAtRotation(SpawnLocation, bIsHit ? HitResult.Location : EndLocation);
 	}
 

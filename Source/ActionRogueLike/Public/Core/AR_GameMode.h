@@ -26,13 +26,16 @@ class ACTIONROGUELIKE_API AAR_GameMode : public AGameMode
 
 public:
 	virtual void StartPlay() override;
-
+	virtual void OnActorKilled(AActor* VictimActor, AActor* KillerActor);
 	
 protected:
 	void SpawnBots();
 	UFUNCTION()
 	void OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
 	bool CountAliveBots();
+	UFUNCTION()
+	void RespawnPlayer(AController* Controller);
+	
 private:
 	FTimerHandle SpawnBotsTimerHandle;
 	UPROPERTY(EditDefaultsOnly, Category="AI")
@@ -45,4 +48,6 @@ private:
 	int32 MaxNumberOfBots;
 	UPROPERTY(EditDefaultsOnly, Category="AI")
 	UCurveFloat* DifficultyCurve;
+	UPROPERTY(EditDefaultsOnly, Category="Player")
+	float RespawnDelay;
 };

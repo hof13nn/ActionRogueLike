@@ -7,6 +7,7 @@
 #include "AR_GameplayInterface.h"
 #include "Camera/CameraComponent.h"
 
+static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("su.InteractionDebugDraw"), false, TEXT("Enable Debug Lines for Interaction Component"), ECVF_Cheat);
 
 // Sets default values for this component's properties
 UAR_InteractionComponent::UAR_InteractionComponent()
@@ -71,7 +72,11 @@ void UAR_InteractionComponent::PrimaryInteract()
 			const FVector EndLocation = StartLocation + (CameraComponent.Get() -> GetForwardVector() * TraceLength);
 		
 			const bool bIsHit = GetWorld() -> LineTraceSingleByObjectType(HitResult, StartLocation, EndLocation, QueryParams);
-			DrawDebugLine(GetWorld(), StartLocation, EndLocation, bIsHit ? FColor::Green : FColor::Red, false, 2.f, 0.f, 2.f);
+
+			if (CVarDebugDrawInteraction.GetValueOnGameThread())
+			{
+				DrawDebugLine(GetWorld(), StartLocation, EndLocation, bIsHit ? FColor::Green : FColor::Red, false, 2.f, 0.f, 2.f);
+			}
 			
 			if (bIsHit)
 			{

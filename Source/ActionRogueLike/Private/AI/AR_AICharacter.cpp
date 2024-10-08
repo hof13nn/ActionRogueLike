@@ -5,12 +5,16 @@
 
 #include "AIController.h"
 #include "AR_AttributeComponent.h"
+#include "AR_GameMode.h"
 #include "AR_StringLibrary.h"
 #include "BrainComponent.h"
 #include "WAR_WorldUserWidget.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
+
 
 
 // Sets default values
@@ -57,6 +61,16 @@ void AAR_AICharacter::SetupComponents()
 		{
 			AddOwnedComponent(AttributeComponent);
 		}
+	}
+
+	if (GetCapsuleComponent())
+	{
+		GetCapsuleComponent() -> SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore);
+	}
+
+	if (GetMesh())
+	{
+		GetMesh() -> SetGenerateOverlapEvents(true);
 	}
 
 	AutoPossessAI = EAutoPossessAI::Spawned;
@@ -136,9 +150,7 @@ float AAR_AICharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 		
 		if (!AttributeComponent -> DecreaseHealth(Amount))
 		{
-			AAIController* AIController = Cast<AAIController>(GetController());
-			
-			if (AIController)
+			if (AAIController* AIController = Cast<AAIController>(GetController()))
 			{
 				AIController -> GetBrainComponent() -> StopLogic(TEXT("Killed"));
 			}
@@ -146,6 +158,13 @@ float AAR_AICharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 			HealthBarWidget -> RemoveFromParent();
 			GetMesh() -> SetAllBodiesSimulatePhysics(true);
 			GetMesh() -> SetCollisionProfileName(TEXT("Ragdoll"));
+			GetCapsuleComponent() -> SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			GetCharacterMovement() -> DisableMovement();
+			
+			if (AAR_GameMode* GM = GetWorld() -> GetAuthGameMode<AAR_GameMode>())
+			{
+				GM -> OnActorKilled(this, DamageCauser);
+			}
 		}
 		else
 		{

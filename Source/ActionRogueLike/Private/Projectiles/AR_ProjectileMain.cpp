@@ -52,7 +52,7 @@ void AAR_ProjectileMain::PostInitializeComponents()
 	
 	if (ensure(BoxComponent))
 	{
-		BoxComponent -> OnComponentHit.AddDynamic(this, &ThisClass::OnHit);
+		//BoxComponent -> OnComponentHit.AddDynamic(this, &ThisClass::OnHit);
 		BoxComponent -> OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnOverlap);
 	}
 
@@ -122,6 +122,19 @@ void AAR_ProjectileMain::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		if (OtherActor -> Implements<UAR_Damageable>())
 		{
 			UGameplayStatics::ApplyDamage(OtherActor, Damage, nullptr, GetOwner(), nullptr);
+
+			if (OverlappedComponent)
+			{
+				if (OverlappedComponent -> IsSimulatingPhysics(SweepResult.BoneName))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("AAR_ProjectileMain::OnOverlap: Adding Impulse"));
+					OverlappedComponent -> AddImpulseAtLocation(-SweepResult.ImpactNormal * 300000.f, SweepResult.ImpactPoint, SweepResult.BoneName);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Error, TEXT("AAR_ProjectileMain::OnOverlap: Can't Add Impulse"));
+				}
+			}
 			
 			// IAR_Damageable::Execute_DecreaseHealth(OtherActor, Damage);s
 
