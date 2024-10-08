@@ -174,6 +174,11 @@ TWeakObjectPtr<UCameraComponent> AAR_Character::GetCameraComponent() const
 	return TWeakObjectPtr<UCameraComponent>(CameraComponent);
 }
 
+UAR_AttributeComponent* AAR_Character::GetAttributeComponent()
+{
+	return AttributeComponent;
+}
+
 void AAR_Character::SetupInput(const AAR_PlayerController* PlayerController)
 {
 	if (UAR_InputConfig* InputConfig = LoadObject<UAR_InputConfig>(this, *FPathLibrary::InputConfigPath))

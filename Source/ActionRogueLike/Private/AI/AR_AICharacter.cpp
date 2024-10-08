@@ -7,7 +7,9 @@
 #include "AR_AttributeComponent.h"
 #include "AR_StringLibrary.h"
 #include "BrainComponent.h"
+#include "WAR_WorldUserWidget.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "Perception/PawnSensingComponent.h"
 
 
@@ -18,6 +20,11 @@ AAR_AICharacter::AAR_AICharacter()
 	PrimaryActorTick.bCanEverTick = false;
 
 	SetupComponents();
+}
+
+UAR_AttributeComponent* AAR_AICharacter::GetAttributeComponent()
+{
+	return AttributeComponent;
 }
 
 void AAR_AICharacter::PostInitializeComponents()
@@ -114,6 +121,17 @@ float AAR_AICharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 
 	if (ensure(AttributeComponent))
 	{
+		if (!HealthBarWidget && ensureMsgf(HealthBarWidgetClass, TEXT("AAR_AICharacter::TakeDamage: HealthBarWidgetClass is NULL")))
+		{
+			HealthBarWidget = CreateWidget<UWAR_WorldUserWidget>(GetWorld(), HealthBarWidgetClass);
+
+			if (HealthBarWidget)
+			{
+				HealthBarWidget -> SetAttachedToActor(this);
+				HealthBarWidget -> AddToViewport();
+			}
+		}
+		
 		GetMesh() -> SetScalarParameterValueOnMaterials("TimeToHit", GetWorld() -> GetTimeSeconds());
 		
 		if (!AttributeComponent -> DecreaseHealth(Amount))
@@ -125,6 +143,7 @@ float AAR_AICharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 				AIController -> GetBrainComponent() -> StopLogic(TEXT("Killed"));
 			}
 
+			HealthBarWidget -> RemoveFromParent();
 			GetMesh() -> SetAllBodiesSimulatePhysics(true);
 			GetMesh() -> SetCollisionProfileName(TEXT("Ragdoll"));
 		}
@@ -134,8 +153,6 @@ float AAR_AICharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 		}
 		
 		FString CurrentHealth = FString::Printf(TEXT("Health's been resored. Current Health: %f"), AttributeComponent -> GetCurrentHealth());
-		
-		DrawDebugString(GetWorld(), GetActorLocation(), CurrentHealth, nullptr, FColor::Green, 1.f, true);
 	}
 	
 	return Amount;
@@ -154,8 +171,6 @@ void AAR_AICharacter::SetTarget(AActor* NewTarget)
 			if (ensure(BlackboardComponent))
 			{
 				BlackboardComponent -> SetValueAsObject(*FAIKeyLibrary::RMinionTargetActor, NewTarget);
-
-				DrawDebugString(GetWorld(), GetActorLocation(), TEXT("Player Spotted"), nullptr, FColor::Green, 2.f, true);
 			}
 		}
 	}

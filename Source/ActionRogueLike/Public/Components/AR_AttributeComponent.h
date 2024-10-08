@@ -28,7 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool GetIsAlive() const;
 	float GetCurrentHealth();
-	
+
+	UFUNCTION(BlueprintCallable)
+	static UAR_AttributeComponent* GetAttributeComponent(AActor* TargetActor);
 private:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Attributes")

@@ -52,7 +52,7 @@ public:
 	virtual bool GetNeedHealth_Implementation() override;
 	virtual bool GetIsAlive_Implementation() override;
 	TWeakObjectPtr<UCameraComponent> GetCameraComponent() const;
-	
+	UAR_AttributeComponent* GetAttributeComponent();
 private:
 	UPROPERTY(EditAnywhere)
 	USpringArmComponent* SpringArmComponent;

@@ -26,13 +26,13 @@ class ACTIONROGUELIKE_API AAR_GameMode : public AGameMode
 
 public:
 	virtual void StartPlay() override;
-	bool CountAliveBots();
 
+	
 protected:
 	void SpawnBots();
 	UFUNCTION()
 	void OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
-	
+	bool CountAliveBots();
 private:
 	FTimerHandle SpawnBotsTimerHandle;
 	UPROPERTY(EditDefaultsOnly, Category="AI")

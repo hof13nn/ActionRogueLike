@@ -3,6 +3,9 @@
 
 #include "AR_AttributeComponent.h"
 
+#include "AR_AICharacter.h"
+#include "AR_Character.h"
+
 
 // Sets default values for this component's properties
 UAR_AttributeComponent::UAR_AttributeComponent()
@@ -32,6 +35,7 @@ void UAR_AttributeComponent::IncreaseHealth(const float& Amount)
 void UAR_AttributeComponent::RestoreHealth()
 {
 	CurrentHealth = MaxHealth;
+	OnHealthChanged.Broadcast(nullptr, this, CurrentHealth, CurrentHealth / MaxHealth);
 }
 
 bool UAR_AttributeComponent::GetNeedHealth()
@@ -52,4 +56,21 @@ bool UAR_AttributeComponent::GetIsAlive() const
 float UAR_AttributeComponent::GetCurrentHealth()
 {
 	return CurrentHealth;
+}
+
+UAR_AttributeComponent* UAR_AttributeComponent::GetAttributeComponent(AActor* TargetActor)
+{
+	if (TargetActor)
+	{
+		if (AAR_Character* OwningChar = Cast<AAR_Character>(TargetActor))
+		{
+			return OwningChar -> GetAttributeComponent();
+		}
+		if (AAR_AICharacter* OwningChar = Cast<AAR_AICharacter>(TargetActor))
+		{
+			return OwningChar -> GetAttributeComponent();
+		}
+	}
+
+	return nullptr;
 }

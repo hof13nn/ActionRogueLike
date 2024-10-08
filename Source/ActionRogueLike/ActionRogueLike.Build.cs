@@ -8,7 +8,7 @@ public class ActionRogueLike : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule", "GameplayTasks" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule", "GameplayTasks", "UMG" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
@@ -39,7 +39,7 @@ public class ActionRogueLike : ModuleRules
 			"ActionRogueLike/Public/Misc",
 			"ActionRogueLike/Public/Player",
 			"ActionRogueLike/Public/Projectiles",
-			// "ActionRogueLike/Public/UI",
+			"ActionRogueLike/Public/UI",
 			// "ActionRogueLike/Public/UI/Objects",
 			// "ActionRogueLike/Public/Weapons"
 		});
