@@ -52,6 +52,7 @@ public:
 	virtual bool GetNeedHealth_Implementation() override;
 	virtual bool GetIsAlive_Implementation() override;
 	TWeakObjectPtr<UCameraComponent> GetCameraComponent() const;
+	UFUNCTION(Blueprintable)
 	UAR_AttributeComponent* GetAttributeComponent();
 private:
 	UPROPERTY(EditAnywhere)

@@ -3,6 +3,8 @@
 
 #include "AR_InteractableObjectBase.h"
 
+#include "AR_PlayerController.h"
+#include "AR_PlayerState.h"
 #include "Components/BoxComponent.h"
 
 
@@ -13,6 +15,9 @@ AAR_InteractableObjectBase::AAR_InteractableObjectBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SetupComponents();
+
+	bIsWithdraw = true;
+	CreditsValue = 0;
 }
 
 void AAR_InteractableObjectBase::SetupComponents()
@@ -38,8 +43,46 @@ void AAR_InteractableObjectBase::SetupComponents()
 	}
 }
 
-void AAR_InteractableObjectBase::Interact_Implementation(APawn* InstigatorPawn)
+bool AAR_InteractableObjectBase::Interact_Implementation(APawn* InstigatorPawn)
 {
-	
+	return bIsWithdraw ? WithdrawCredits(InstigatorPawn) : AddCredits(InstigatorPawn);
 }
 
+UClass* AAR_InteractableObjectBase::GetObjectClass()
+{
+	return StaticClass();
+}
+
+bool AAR_InteractableObjectBase::WithdrawCredits(APawn* InstigatorPawn) const
+{
+	if (AAR_PlayerController* Controller = Cast<AAR_PlayerController>(InstigatorPawn -> GetController()))
+	{
+		if (AAR_PlayerState* PlayerState = Controller -> GetPlayerState<AAR_PlayerState>())
+		{
+			if (PlayerState -> GetCredits() >= CreditsValue)
+			{
+				Controller -> OnAddCredits(InstigatorPawn, -CreditsValue);
+
+				return true;
+			}
+
+			return false;
+		}
+
+		return false;
+	}
+
+	return false;
+}
+
+bool AAR_InteractableObjectBase::AddCredits(APawn* InstigatorPawn) const
+{
+	if (AAR_PlayerController* Controller = Cast<AAR_PlayerController>(InstigatorPawn -> GetController()))
+	{
+		Controller -> OnAddCredits(InstigatorPawn, CreditsValue);
+
+		return true;
+	}
+
+	return false;
+}

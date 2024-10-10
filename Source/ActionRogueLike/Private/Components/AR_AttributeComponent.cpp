@@ -58,6 +58,11 @@ float UAR_AttributeComponent::GetCurrentHealth()
 	return CurrentHealth;
 }
 
+float UAR_AttributeComponent::GetMaxHealth()
+{
+	return MaxHealth;
+}
+
 UAR_AttributeComponent* UAR_AttributeComponent::GetAttributeComponent(AActor* TargetActor)
 {
 	if (TargetActor)

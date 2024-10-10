@@ -18,7 +18,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
+	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
 	void SetActive(const bool& Value);
 private:
 	UPROPERTY(VisibleAnywhere)

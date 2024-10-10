@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "AR_ItemChest.generated.h"
 
+class UTimelineComponent;
 class UBoxComponent;
 
 UCLASS()
@@ -23,7 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void Interact_Implementation(APawn* InstigatorPawn);
+	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
 	
 private:
 	UPROPERTY()
@@ -36,4 +37,6 @@ private:
 	UBoxComponent* BoxComponent;
 	UPROPERTY(EditAnywhere)
 	float TargetPitch;
+	UPROPERTY(EditAnywhere)
+	UTimelineComponent* TimelineTemplate;
 };

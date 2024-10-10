@@ -20,14 +20,20 @@ public:
 
 protected:
 	void SetupComponents();
-
+	bool WithdrawCredits(APawn* InstigatorPawn) const;
+	bool AddCredits(APawn* InstigatorPawn) const;
+	
 public:
 	UFUNCTION(BlueprintCallable)
-	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
-
+	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
+	UClass* GetObjectClass();
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* BoxComponent;
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Mesh;
+	UPROPERTY(EditDefaultsOnly)
+	bool bIsWithdraw;
+	UPROPERTY(EditDefaultsOnly)
+	int32 CreditsValue;
 };

@@ -4,6 +4,7 @@
 #include "AR_ItemChest.h"
 
 #include "Components/BoxComponent.h"
+#include "Engine/TimelineTemplate.h"
 
 
 // Sets default values
@@ -57,6 +58,16 @@ void AAR_ItemChest::SetupComponents()
 			BoxComponent -> SetupAttachment(RootComponent);
 		}
 	}
+
+	if (!TimelineTemplate)
+	{
+		TimelineTemplate = CreateDefaultSubobject<UTimelineComponent>(TEXT("DashTimeLine"));
+
+		if (TimelineTemplate)
+		{
+			AddOwnedComponent(TimelineTemplate);
+		}
+	}
 }
 
 // Called when the game starts or when spawned
@@ -65,10 +76,16 @@ void AAR_ItemChest::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AAR_ItemChest::Interact_Implementation(APawn* InstigatorPawn)
+bool AAR_ItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if (LidMesh)
 	{
 		LidMesh -> SetRelativeRotation(FRotator(TargetPitch, 0.f, 0.f));
+
+		TimelineTemplate -> Play();
+		
+		return true;
 	}
+
+	return false;
 }

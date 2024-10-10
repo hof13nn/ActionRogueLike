@@ -16,4 +16,11 @@ class ACTIONROGUELIKE_API AAR_PlayerController : public APlayerController
 
 private:
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void BeginPlay() override;
+
+public:
+	UFUNCTION(BlueprintNativeEvent, Category= UI)
+	void OnAddCredits(AActor* Actor, const int32& Credits);
+	UFUNCTION(BlueprintCallable)
+	int32 GetCredits();
 };

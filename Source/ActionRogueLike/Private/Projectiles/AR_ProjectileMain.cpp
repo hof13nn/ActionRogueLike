@@ -18,7 +18,7 @@ AAR_ProjectileMain::AAR_ProjectileMain()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	Damage = 15.f;
+	Damage = 50.f;
 	ProjectileSpeed = 2500.f;
 	
 	AAR_ProjectileMain::SetupComponents();

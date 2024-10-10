@@ -27,7 +27,10 @@ public:
 	bool GetIsLowHealth();
 	UFUNCTION(BlueprintCallable)
 	bool GetIsAlive() const;
+	UFUNCTION(BlueprintCallable)
 	float GetCurrentHealth();
+	UFUNCTION(BlueprintCallable)
+	float GetMaxHealth();
 
 	UFUNCTION(BlueprintCallable)
 	static UAR_AttributeComponent* GetAttributeComponent(AActor* TargetActor);

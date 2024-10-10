@@ -23,5 +23,5 @@ class ACTIONROGUELIKE_API IAR_GameplayInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void Interact(APawn* InstigatorPawn);
+	bool Interact(APawn* InstigatorPawn);
 };
