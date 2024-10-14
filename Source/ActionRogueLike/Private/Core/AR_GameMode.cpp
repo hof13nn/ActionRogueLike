@@ -72,6 +72,7 @@ bool AAR_GameMode::CountExistItems()
 	
 	if (AActor* Actor = GetWorld() -> SpawnActor(ItemToSpawn))
 	{
+		Actor -> Destroy();
 		int32 Counter = 0;
 		
 		if (Cast<AAR_HealthPotion>(Actor))
@@ -88,11 +89,10 @@ bool AAR_GameMode::CountExistItems()
 		
 			if (Counter >= MaxNumberOfPotions)
 			{
-				Actor -> Destroy();
+		
 				return false;
 			}
 
-			Actor -> Destroy();
 			return true;
 		
 		}
@@ -110,11 +110,9 @@ bool AAR_GameMode::CountExistItems()
 		
 			if (Counter >= MaxNumberOfCoins)
 			{
-				Actor -> Destroy();
 				return false;
 			}
-
-			Actor -> Destroy();
+			
 			return true;
 		}
 

@@ -39,11 +39,6 @@ void AAR_ProjectileMain::SetupComponents()
 void AAR_ProjectileMain::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (ensure(AudioComponent))
-	{
-		AudioComponent -> Play();
-	}
 }
 
 void AAR_ProjectileMain::PostInitializeComponents()
@@ -77,6 +72,7 @@ void AAR_ProjectileMain::PostInitializeComponents()
 		if (USoundCue* Sound = LoadObject<USoundCue>(this, *FPathLibrary::ProjectileMainSoundPath))
 		{
 			AudioComponent -> SetSound(Sound);
+			AudioComponent -> Play();
 		}
 	}
 
@@ -127,13 +123,16 @@ void AAR_ProjectileMain::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			{
 				if (OverlappedComponent -> IsSimulatingPhysics(SweepResult.BoneName))
 				{
-					UE_LOG(LogTemp, Warning, TEXT("AAR_ProjectileMain::OnOverlap: Adding Impulse"));
-					OverlappedComponent -> AddImpulseAtLocation(-SweepResult.ImpactNormal * 300000.f, SweepResult.ImpactPoint, SweepResult.BoneName);
+					FVector Direction = SweepResult.TraceEnd - SweepResult.TraceStart;
+					Direction.Normalize();
+					
+					//UE_LOG(LogTemp, Warning, TEXT("AAR_ProjectileMain::OnOverlap: Adding Impulse"));
+					OverlappedComponent -> AddImpulseAtLocation(Direction * 300000.f, SweepResult.ImpactPoint, SweepResult.BoneName);
 				}
-				else
-				{
-					UE_LOG(LogTemp, Error, TEXT("AAR_ProjectileMain::OnOverlap: Can't Add Impulse"));
-				}
+				// else
+				// {
+				// 	UE_LOG(LogTemp, Error, TEXT("AAR_ProjectileMain::OnOverlap: Can't Add Impulse"));
+				// }
 			}
 			
 			// IAR_Damageable::Execute_DecreaseHealth(OtherActor, Damage);s

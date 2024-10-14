@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AR_Character.generated.h"
 
+class UAR_ActionComponent;
 class UAR_AttributeComponent;
 class UAR_InteractionComponent;
 class UAR_InputConfig;
@@ -29,13 +30,15 @@ private:
 	void HandleMove(const FInputActionValue& InputActionValue);
 	void HandleTurn(const FInputActionValue& InputActionValue);
 	void HandleJump(const FInputActionValue& InputActionValue);
-	void SpawnMainProjectile();
-	void SpawnSpecialProjectile();
-	void SpawnTeleportProjectile();
-	FRotator CalculateRotation(const FVector& SpawnLocation) const;
+	void HandleStartSprint(const FInputActionValue& InputActionValue);
+	void HandleStopSprint(const FInputActionValue& InputActionValue);
+	// void SpawnMainProjectile();
+	// void SpawnSpecialProjectile();
+	// void SpawnTeleportProjectile();
+	// FRotator CalculateRotation(const FVector& SpawnLocation) const;
 	void HandlePrimaryAttack(const FInputActionValue& InputActionValue);
 	void HandleSpecialAttack(const FInputActionValue& InputActionValue);
-	void HandleTeleport(const FInputActionValue& InputActionValue);
+	void HandleDash(const FInputActionValue& InputActionValue);
 	void HandleInteract(const FInputActionValue& InputActionValue);
 	
 protected:
@@ -52,6 +55,7 @@ public:
 	virtual bool GetNeedHealth_Implementation() override;
 	virtual bool GetIsAlive_Implementation() override;
 	TWeakObjectPtr<UCameraComponent> GetCameraComponent() const;
+	virtual FVector GetPawnViewLocation() const override;
 	UFUNCTION(Blueprintable)
 	UAR_AttributeComponent* GetAttributeComponent();
 private:
@@ -63,6 +67,8 @@ private:
 	UAR_InteractionComponent* InteractionComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
 	UAR_AttributeComponent* AttributeComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
+	UAR_ActionComponent* ActionComponent;
 	UPROPERTY(EditDefaultsOnly, Category= "Animations")
 	UAnimMontage* PrimaryAttackAnim;
 	FTimerHandle PrimaryAttackTimerHandle;

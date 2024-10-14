@@ -49,7 +49,7 @@ public:
 	inline static const FString IA_MovePath = TEXT("/Game/Input/Actions/IA_Move.IA_Move");
 	inline static const FString IA_TurnPath = TEXT("/Game/Input/Actions/IA_Turn.IA_Turn");
 	inline static const FString IA_JumpPath = TEXT("/Game/Input/Actions/IA_Jump.IA_Jump");
-	inline static const FString IA_SwitchWeaponPath = TEXT("/Game/Input/Actions/IA_SwitchWeapon.IA_SwitchWeapon");
+	inline static const FString IA_SprintPath = TEXT("/Game/Input/Actions/IA_Sprint.IA_Sprint");
 	inline static const FString IA_FirePath = TEXT("/Game/Input/Actions/IA_Fire.IA_Fire");
 	inline static const FString IA_SpecialFire = TEXT("/Game/Input/Actions/IA_SpecialFire.IA_SpecialFire");
 	inline static const FString IA_TeleportPath = TEXT("/Game/Input/Actions/IA_Teleport.IA_Teleport");
@@ -91,4 +91,20 @@ class ACTIONROGUELIKE_API FAIKeyLibrary
 public:
 	inline static const FString RMinionMoveToLoc = TEXT("MoveToLoc");
 	inline static const FString RMinionTargetActor = TEXT("TargetActor");
+};
+
+class ACTIONROGUELIKE_API FActionNamesLibrary
+{
+public:
+	//Player
+	inline static FName Sprint = TEXT("Sprint");
+	inline static FName PrimaryAttack = TEXT("Primary Attack");
+	inline static FName SecondaryAttack = TEXT("Secondary Attack");
+	inline static FName DashAttack = TEXT("Dash Attack");
+	// inline static FName CharacterProjectileSpawnSocket = TEXT("Muzzle_01");
+	// inline static FName CharacterGroundSocket = TEXT("GroundSocket");
+	// inline static FName CharacterBodySocket = TEXT("BodySocket");
+	// inline static FName CharacterHeadSocket = TEXT("HeadSocket");
+	// inline static FName WeaponProjectileSpawn = TEXT("ProjectileSpawn");
+	// inline static FName WeaponEjectableMeshSpawn = TEXT("EjectableMeshSpawn");
 };

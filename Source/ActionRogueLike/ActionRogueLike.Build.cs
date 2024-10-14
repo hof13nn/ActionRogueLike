@@ -14,6 +14,7 @@ public class ActionRogueLike : ModuleRules
 
 		PublicIncludePaths.AddRange(new string[]
 		{
+			"ActionRogueLike/Public/Actions",
 			"ActionRogueLike/Public/AI",
 			"ActionRogueLike/Public/AI/Tasks",
 			"ActionRogueLike/Public/AI/Services",
