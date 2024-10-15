@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AR_ProjectileBase.h"
+#include "GameplayTagContainer.h"
 #include "AR_ProjectileMain.generated.h"
 
 UCLASS()
@@ -32,4 +33,6 @@ protected:
 	float Damage;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float ProjectileSpeed;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag ParryTag;
 };

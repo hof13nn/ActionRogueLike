@@ -25,7 +25,7 @@ protected:
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
+	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 	UClass* GetObjectClass();
 protected:
 	UPROPERTY(EditDefaultsOnly)

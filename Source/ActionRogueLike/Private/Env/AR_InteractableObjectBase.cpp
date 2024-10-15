@@ -43,9 +43,9 @@ void AAR_InteractableObjectBase::SetupComponents()
 	}
 }
 
-bool AAR_InteractableObjectBase::Interact_Implementation(APawn* InstigatorPawn)
+void AAR_InteractableObjectBase::Interact_Implementation(APawn* InstigatorPawn)
 {
-	return bIsWithdraw ? WithdrawCredits(InstigatorPawn) : AddCredits(InstigatorPawn);
+	bIsWithdraw ? WithdrawCredits(InstigatorPawn) : AddCredits(InstigatorPawn);
 }
 
 UClass* AAR_InteractableObjectBase::GetObjectClass()

@@ -25,21 +25,18 @@ void AAR_HealthPotion::BeginPlay()
 	
 }
 
-bool AAR_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
+void AAR_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if (ensure(InstigatorPawn))
 	{
-		if (IAR_Damageable::Execute_GetNeedHealth(InstigatorPawn) && Super::Interact_Implementation(InstigatorPawn))
+		if (IAR_Damageable::Execute_GetNeedHealth(InstigatorPawn))
 		{
+			Super::Interact_Implementation(InstigatorPawn);
 			IAR_Damageable::Execute_IncreaseHealth(InstigatorPawn, HealthAmount);
 
 			Destroy();
-
-			return true;
 		}
 	}
-
-	return false;
 }
 
 void AAR_HealthPotion::SetActive(const bool& Value)

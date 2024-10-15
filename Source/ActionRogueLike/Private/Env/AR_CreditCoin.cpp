@@ -16,15 +16,9 @@ AAR_CreditCoin::AAR_CreditCoin()
 	Tags.Emplace(TEXT("Coin"));
 }
 
-bool AAR_CreditCoin::Interact_Implementation(APawn* InstigatorPawn)
+void AAR_CreditCoin::Interact_Implementation(APawn* InstigatorPawn)
 {
-	const bool bCanInteract = Super::Interact_Implementation(InstigatorPawn);
-
-	if (bCanInteract)
-	{
-		Destroy();
-	}
-
-	return bCanInteract;
+	Super::Interact_Implementation(InstigatorPawn);
+	Destroy();
 }
 

@@ -2,6 +2,8 @@
 
 
 #include "AR_ProjectileMain.h"
+
+#include "AR_ActionComponent.h"
 #include "AR_Damageable.h"
 #include "AR_StringLibrary.h"
 #include "Components/AudioComponent.h"
@@ -113,8 +115,18 @@ void AAR_ProjectileMain::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 void AAR_ProjectileMain::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (ensure(OtherActor) && OtherActor != GetOwner())
+	if (ensure(OtherActor) && OtherActor != GetInstigator())
 	{
+		UAR_ActionComponent* AC = Cast<UAR_ActionComponent>(OtherActor -> GetComponentByClass(UAR_ActionComponent::StaticClass()));
+
+		if (AC && AC -> HasTag(ParryTag))
+		{
+			MovementComponent -> Velocity = -MovementComponent -> Velocity;
+
+			SetInstigator(Cast<APawn>(OtherActor));
+			return;
+		}
+		
 		if (OtherActor -> Implements<UAR_Damageable>())
 		{
 			UGameplayStatics::ApplyDamage(OtherActor, Damage, nullptr, GetOwner(), nullptr);
@@ -125,17 +137,9 @@ void AAR_ProjectileMain::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 				{
 					FVector Direction = SweepResult.TraceEnd - SweepResult.TraceStart;
 					Direction.Normalize();
-					
-					//UE_LOG(LogTemp, Warning, TEXT("AAR_ProjectileMain::OnOverlap: Adding Impulse"));
 					OverlappedComponent -> AddImpulseAtLocation(Direction * 300000.f, SweepResult.ImpactPoint, SweepResult.BoneName);
 				}
-				// else
-				// {
-				// 	UE_LOG(LogTemp, Error, TEXT("AAR_ProjectileMain::OnOverlap: Can't Add Impulse"));
-				// }
 			}
-			
-			// IAR_Damageable::Execute_DecreaseHealth(OtherActor, Damage);s
 
 			if (TSubclassOf<UCameraShakeBase> CameraShakeBase = LoadClass<UCameraShakeBase>(this, *FPathLibrary::ProjectileMainCameraShakePath))
 			{

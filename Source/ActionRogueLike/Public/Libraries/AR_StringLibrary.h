@@ -53,7 +53,7 @@ public:
 	inline static const FString IA_FirePath = TEXT("/Game/Input/Actions/IA_Fire.IA_Fire");
 	inline static const FString IA_SpecialFire = TEXT("/Game/Input/Actions/IA_SpecialFire.IA_SpecialFire");
 	inline static const FString IA_TeleportPath = TEXT("/Game/Input/Actions/IA_Teleport.IA_Teleport");
-	inline static const FString IA_ZoomInPath = TEXT("/Game/Input/Actions/IA_ZoomIn.IA_ZoomIn");
+	inline static const FString IA_ParryPath = TEXT("/Game/Input/Actions/IA_Parry.IA_Parry");
 	inline static const FString IA_ZoomOutPath = TEXT("/Game/Input/Actions/IA_ZoomOut.IA_ZoomOut");
 	inline static const FString IA_InteractPath = TEXT("/Game/Input/Actions/IA_Interact.IA_Interact");
 	inline static const FString IA_InventoryPath = TEXT("/Game/Input/Actions/IA_Inventory.IA_Inventory");

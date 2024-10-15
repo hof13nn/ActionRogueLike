@@ -39,31 +39,21 @@ void UAR_Action_ProjectileAttack::StartAction_Implementation(AActor* Instigator)
 
 void UAR_Action_ProjectileAttack::AttackDelay_Elapsed(ACharacter* Instigator)
 {
-	if (Instigator)
-	{
-		FActorSpawnParameters SpawnParameters;
-		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		SpawnParameters.Owner = Instigator;
-		SpawnParameters.Instigator = Instigator;
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParameters.Owner = Instigator;
+	SpawnParameters.Instigator = Instigator;
 		
-		const FVector SpawnLocation = Instigator -> GetMesh() -> GetSocketLocation(FSocketLibrary::CharacterProjectileSpawnSocket);
-		const FRotator Rotation = CalculateRotation(Instigator, SpawnLocation);
-		const FTransform Transform = FTransform(Rotation, SpawnLocation);
-
-		if (GetWorld())
-		{
-			if (!GetWorld() -> SpawnActor<AActor>(ProjectileClass, Transform, SpawnParameters))
-			{
-				UE_LOG(LogTemp, Error, TEXT("AAR_Character::SpawnProjectile: Couldn't spawn Projectile"));
-			}
-		}
-
-		StopAction(Instigator);
-	}
-	else
+	const FVector SpawnLocation = Instigator -> GetMesh() -> GetSocketLocation(FSocketLibrary::CharacterProjectileSpawnSocket);
+	const FRotator Rotation = CalculateRotation(Instigator, SpawnLocation);
+	const FTransform Transform = FTransform(Rotation, SpawnLocation);
+		
+	if (!GetWorld() -> SpawnActor<AActor>(ProjectileClass, Transform, SpawnParameters))
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s::AttackDelay_Elapsed: Instigator is NULL"), *GetNameSafe(this));
+		UE_LOG(LogTemp, Error, TEXT("AAR_Character::SpawnProjectile: Couldn't spawn Projectile"));
 	}
+
+	StopAction(Instigator);
 }
 
 FRotator UAR_Action_ProjectileAttack::CalculateRotation(ACharacter* Instigator, const FVector& SpawnLocation) const

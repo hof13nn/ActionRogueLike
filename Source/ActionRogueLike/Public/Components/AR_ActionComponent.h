@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "AR_ActionComponent.generated.h"
 
@@ -23,7 +24,21 @@ public:
 	bool StartActionByName(AActor* Instigator, const FName& ActionName);
 	UFUNCTION(BlueprintCallable, Category="Actions")
 	bool StopActionByName(AActor* Instigator, const FName& ActionName);
-
+	UFUNCTION(BlueprintCallable, Category="Actions")
+	void AddTags(const FGameplayTagContainer& Tags);
+	UFUNCTION(BlueprintCallable, Category="Actions")
+	void AddTag(const FGameplayTag& Tag);
+	UFUNCTION(BlueprintCallable, Category="Actions")
+	void RemoveTags(const FGameplayTagContainer& Tags);
+	UFUNCTION(BlueprintCallable, Category="Actions")
+	void RemoveTag(const FGameplayTag& Tag);
+	UFUNCTION(BlueprintCallable, Category="Actions")
+	bool HasTags(const FGameplayTagContainer& Tags);
+	UFUNCTION(BlueprintCallable, Category="Actions")
+	bool HasTag(const FGameplayTag& Tag);
+	// UFUNCTION(BlueprintCallable, Category="Actions")
+	// FGameplayTagContainer& GetActiveGameplayTags();
+	
 protected:
 	virtual void OnRegister() override;
 	
@@ -32,4 +47,6 @@ private:
 	TArray<UAR_ActionBase*> ActionsArr;
 	UPROPERTY(EditAnywhere, Category="Actions")
 	TArray<TSubclassOf<UAR_ActionBase>> ActionClassesArr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tags", meta=(AllowPrivateAccess="true"))
+	FGameplayTagContainer ActiveGameplayTags;
 };

@@ -24,7 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
+	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 	
 private:
 	UPROPERTY()

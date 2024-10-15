@@ -76,16 +76,16 @@ void AAR_ItemChest::BeginPlay()
 	Super::BeginPlay();
 }
 
-bool AAR_ItemChest::Interact_Implementation(APawn* InstigatorPawn)
+void AAR_ItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	if (LidMesh)
-	{
-		LidMesh -> SetRelativeRotation(FRotator(TargetPitch, 0.f, 0.f));
-
-		TimelineTemplate -> Play();
-		
-		return true;
-	}
-
-	return false;
+	// if (LidMesh)
+	// {
+	// 	LidMesh -> SetRelativeRotation(FRotator(TargetPitch, 0.f, 0.f));
+	//
+	// 	TimelineTemplate -> Play();
+	// 	
+	// 	return true;
+	// }
+	//
+	// return false;
 }

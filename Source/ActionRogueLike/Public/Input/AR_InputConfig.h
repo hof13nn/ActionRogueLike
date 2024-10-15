@@ -37,7 +37,7 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
 	TWeakObjectPtr<UInputAction> IA_Teleport;
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
-	TWeakObjectPtr<UInputAction> IA_ZoomIn;
+	TWeakObjectPtr<UInputAction> IA_Parry;
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")
 	TWeakObjectPtr<UInputAction> IA_ZoomOut;
 	UPROPERTY(VisibleDefaultsOnly, Category= "Input Actions")

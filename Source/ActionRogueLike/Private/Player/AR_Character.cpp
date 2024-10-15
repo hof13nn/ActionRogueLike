@@ -1,17 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "AR_Character.h"
 #include "AR_ActionComponent.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "AR_AttributeComponent.h"
 #include "AR_GameMode.h"
 #include "AR_InputConfig.h"
 #include "AR_PlayerController.h"
-#include "AR_ProjectileBase.h"
-#include "AR_ProjectileMain.h"
-#include "AR_ProjectilePortal.h"
-#include "AR_ProjectileSpecial.h"
 #include "AR_StringLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -20,10 +14,6 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
-
-static TAutoConsoleVariable<bool> CVarDebugDrawProjectilePath(TEXT("su.ProjectilePathDebugDraw"), false, TEXT("Enable Debug Lines for Projectile Path}"), ECVF_Cheat);
 
 // Sets default values
 AAR_Character::AAR_Character()
@@ -356,6 +346,7 @@ void AAR_Character::HandlePrimaryAttack(const FInputActionValue& InputActionValu
 {
 	if (ensure(ActionComponent))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("%s::HandlePrimaryAttack: Attack"), *GetNameSafe(this));
 		ActionComponent -> StartActionByName(this, FActionNamesLibrary::PrimaryAttack);
 	}
 }

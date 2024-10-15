@@ -4,6 +4,7 @@
 #include "AR_AICharacter.h"
 
 #include "AIController.h"
+#include "AR_ActionComponent.h"
 #include "AR_AttributeComponent.h"
 #include "AR_GameMode.h"
 #include "AR_StringLibrary.h"
@@ -60,6 +61,16 @@ void AAR_AICharacter::SetupComponents()
 		if (ensure(AttributeComponent))
 		{
 			AddOwnedComponent(AttributeComponent);
+		}
+	}
+
+	if (!ActionComponent)
+	{
+		ActionComponent = CreateDefaultSubobject<UAR_ActionComponent>(TEXT("Action Component"));
+
+		if (ensure(ActionComponent))
+		{
+			AddOwnedComponent(ActionComponent);
 		}
 	}
 

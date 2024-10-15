@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "AR_AICharacter.generated.h"
 
+class UAR_ActionComponent;
 class UWAR_WorldUserWidget;
 class UAR_AttributeComponent;
 class UPawnSensingComponent;
@@ -35,6 +36,8 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere)
 	UAR_AttributeComponent* AttributeComponent;
+	UPROPERTY(VisibleAnywhere)
+	UAR_ActionComponent* ActionComponent;
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensingComponent;
 	UPROPERTY(EditDefaultsOnly, Category = UI)

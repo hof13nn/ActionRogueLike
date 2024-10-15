@@ -16,5 +16,5 @@ public:
 	AAR_CreditCoin();
 
 protected:
-	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
+	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 };
