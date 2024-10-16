@@ -7,6 +7,8 @@
 #include "GameplayTagContainer.h"
 #include "AR_ProjectileMain.generated.h"
 
+class UAR_ActionEffect;
+
 UCLASS()
 class ACTIONROGUELIKE_API AAR_ProjectileMain : public AAR_ProjectileBase
 {
@@ -35,4 +37,6 @@ protected:
 	float ProjectileSpeed;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag ParryTag;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UAR_ActionEffect> BurningActionClass;
 };

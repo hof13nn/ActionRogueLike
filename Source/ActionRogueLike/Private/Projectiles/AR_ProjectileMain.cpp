@@ -2,8 +2,8 @@
 
 
 #include "AR_ProjectileMain.h"
-
 #include "AR_ActionComponent.h"
+#include "AR_ActionEffect.h"
 #include "AR_Damageable.h"
 #include "AR_StringLibrary.h"
 #include "Components/AudioComponent.h"
@@ -131,6 +131,15 @@ void AAR_ProjectileMain::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		{
 			UGameplayStatics::ApplyDamage(OtherActor, Damage, nullptr, GetOwner(), nullptr);
 
+			if (AC)
+			{
+				if (const TSubclassOf<UAR_ActionEffect> Effect = LoadClass<UAR_ActionEffect>(this, TEXT("/Game/BPs/Actions/BP_Action_Effect_Burning_00.BP_Action_Effect_Burning_00_C")))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s::OnOverlap: Adding Effect"), *GetNameSafe(this));
+					AC -> AddAction(GetInstigator(), Effect);
+				}
+			}
+			
 			if (OverlappedComponent)
 			{
 				if (OverlappedComponent -> IsSimulatingPhysics(SweepResult.BoneName))

@@ -45,6 +45,16 @@ bool UAR_ActionBase::GetIsActive() const
 	return bIsActive;
 }
 
+bool UAR_ActionBase::GetIsAutoStart() const
+{
+	return bIsAutoStart;
+}
+
+void UAR_ActionBase::SetIsAutoStart(const bool& Value)
+{
+	bIsAutoStart = Value;
+}
+
 UAR_ActionComponent* UAR_ActionBase::GetOwningComponent() const
 {
 	return Cast<UAR_ActionComponent>(GetOuter());

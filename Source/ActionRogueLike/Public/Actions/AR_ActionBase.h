@@ -26,6 +26,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Action")
 	bool GetIsActive() const;
 	UFUNCTION(BlueprintCallable, Category="Action")
+	bool GetIsAutoStart() const;
+	UFUNCTION(BlueprintCallable, Category="Action")
+	void SetIsAutoStart(const bool& Value);
+	UFUNCTION(BlueprintCallable, Category="Action")
 	UAR_ActionComponent* GetOwningComponent() const;
 	UFUNCTION(BlueprintCallable, Category="Action")
 	virtual UWorld* GetWorld() const override;
@@ -33,9 +37,12 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, Category="Action", meta=(AllowPrivateAccess="true"))
 	FName Name;
-	UPROPERTY(VisibleAnywhere, Category="Action", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(EditDefaultsOnly, Category="Action", meta=(AllowPrivateAccess="true"))
 	bool bIsActive;
+
 protected:
+	UPROPERTY(VisibleAnywhere, Category="Action", meta=(AllowPrivateAccess="true"))
+	bool bIsAutoStart;
 	UPROPERTY(EditDefaultsOnly, Category="Tags")
 	FGameplayTagContainer GrantsTags;
 	UPROPERTY(EditDefaultsOnly, Category="Tags")

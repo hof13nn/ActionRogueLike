@@ -146,6 +146,8 @@ float AAR_AICharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 
 	if (ensure(AttributeComponent))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("%s::TakeDamage: Taking damage %f"), *GetNameSafe(this), DamageAmount);
+		
 		if (!HealthBarWidget && ensureMsgf(HealthBarWidgetClass, TEXT("AAR_AICharacter::TakeDamage: HealthBarWidgetClass is NULL")))
 		{
 			HealthBarWidget = CreateWidget<UWAR_WorldUserWidget>(GetWorld(), HealthBarWidgetClass);
@@ -182,7 +184,7 @@ float AAR_AICharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 			SetTarget(DamageCauser);
 		}
 		
-		FString CurrentHealth = FString::Printf(TEXT("Health's been resored. Current Health: %f"), AttributeComponent -> GetCurrentHealth());
+		//FString CurrentHealth = FString::Printf(TEXT("Health's been resored. Current Health: %f"), AttributeComponent -> GetCurrentHealth());
 	}
 	
 	return Amount;

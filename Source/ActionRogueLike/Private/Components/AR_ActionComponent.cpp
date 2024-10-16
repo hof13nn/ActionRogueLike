@@ -18,21 +18,36 @@ void UAR_ActionComponent::OnRegister()
 	{
 		for (TSubclassOf<UAR_ActionBase> ActionClass : ActionClassesArr)
 		{
-			AddAction(ActionClass);
+			AddAction(GetOwner(), ActionClass);
 		}
 	}
 }
 
-void UAR_ActionComponent::AddAction(TSubclassOf<UAR_ActionBase> ActionClass)
+void UAR_ActionComponent::AddAction(AActor* Instigator, TSubclassOf<UAR_ActionBase> ActionClass)
 {
-	if (!ensure(ActionClass))
+	if (!ActionClass)
 	{
+		UE_LOG(LogTemp, Error, TEXT("%s::AddAction: Action Class is NULL"), *GetNameSafe(GetOwner()));
 		return;
 	}
 
 	if (UAR_ActionBase* NewAction = NewObject<UAR_ActionBase>(this, ActionClass))
 	{
 		ActionsArr.Emplace(NewAction);
+
+		if (NewAction -> GetIsAutoStart() && ensure(NewAction -> CanStart(Instigator)))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s::AddAction: Starting %s"), *GetNameSafe(GetOwner()), *NewAction -> GetActionName().ToString());
+			NewAction -> StartAction(Instigator);
+		}
+	}
+}
+
+void UAR_ActionComponent::RemoveAction(UAR_ActionBase* Action)
+{
+	if (Action && !Action -> GetIsActive())
+	{
+		ActionsArr.Remove(Action);
 	}
 }
 

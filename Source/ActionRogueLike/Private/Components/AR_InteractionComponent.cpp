@@ -5,6 +5,8 @@
 
 #include "AR_Character.h"
 #include "AR_GameplayInterface.h"
+#include "WAR_WorldUserWidget.h"
+#include "Blueprint/UserWidget.h"
 #include "Camera/CameraComponent.h"
 
 static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("su.InteractionDebugDraw"), false, TEXT("Enable Debug Lines for Interaction Component"), ECVF_Cheat);
@@ -13,7 +15,12 @@ static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("su.InteractionD
 UAR_InteractionComponent::UAR_InteractionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	TraceLength = 5000.f;
+
+	TraceLength = 500.f;
+	TraceRadius = 30.f;
+	FocusedActor = nullptr;
+	QueryChannel = ECC_WorldDynamic;
+	DefaultWidget = nullptr;
 }
 
 // Called when the game starts
@@ -55,38 +62,86 @@ void UAR_InteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	// {
 	// 	UE_LOG(LogTemp, Error, TEXT("UAR_InteractionComponent::TickComponent: No Camera"));
 	// }
+
+	FindBestInteract();
 }
 
-void UAR_InteractionComponent::PrimaryInteract()
+void UAR_InteractionComponent::FindBestInteract()
 {
-	if (GetWorld())
+	FCollisionObjectQueryParams QueryParams;
+	QueryParams.AddObjectTypesToQuery(QueryChannel);
+
+	AActor* MyOwner = GetOwner();
+
+	FVector EyeLocation;
+	FRotator EyeRotation;
+
+	MyOwner -> GetActorEyesViewPoint(EyeLocation, EyeRotation);
+
+	FVector End = EyeLocation + (EyeRotation.Vector() * TraceLength);
+
+	TArray<FHitResult> HitResults;
+	
+	FCollisionShape Shape;
+	Shape.SetSphere(TraceRadius);
+
+	bool bIsHit = GetWorld() -> SweepMultiByObjectType(HitResults, EyeLocation, End, FQuat::Identity, QueryParams, Shape);
+	FColor HitColor = bIsHit ? FColor::Green : FColor::Red;
+
+	FocusedActor = nullptr;
+	
+	for (FHitResult Hit : HitResults)
 	{
-		if (Owner.IsValid() && ensure(CameraComponent.Get()))
+		if (CVarDebugDrawInteraction.GetValueOnGameThread())
 		{
-			FHitResult HitResult;
+			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, TraceRadius, 32, HitColor, false, 2.f);
+		}
 
-			FCollisionObjectQueryParams QueryParams;
-			QueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
-			
-			const FVector StartLocation = CameraComponent.Get() -> GetComponentLocation();
-			const FVector EndLocation = StartLocation + (CameraComponent.Get() -> GetForwardVector() * TraceLength);
-		
-			const bool bIsHit = GetWorld() -> LineTraceSingleByObjectType(HitResult, StartLocation, EndLocation, QueryParams);
-
-			if (CVarDebugDrawInteraction.GetValueOnGameThread())
+		if (AActor* HitActor = Hit.GetActor())
+		{
+			if (HitActor -> Implements<UAR_GameplayInterface>())
 			{
-				DrawDebugLine(GetWorld(), StartLocation, EndLocation, bIsHit ? FColor::Green : FColor::Red, false, 2.f, 0.f, 2.f);
+				FocusedActor = HitActor;
+				break;
 			}
-			
-			if (bIsHit)
-			{
-				TWeakObjectPtr<AActor> Actor = HitResult.GetActor();
+		}
+	}
 
-				if (Actor.IsValid() && Actor.Get() -> Implements<UAR_GameplayInterface>())
+	if (FocusedActor)
+	{
+		if (!DefaultWidget && ensure(DefaultWidgetClass))
+		{
+			DefaultWidget = CreateWidget<UWAR_WorldUserWidget>(GetWorld(), DefaultWidgetClass);
+
+			if (DefaultWidget)
+			{
+				DefaultWidget -> SetAttachedToActor(FocusedActor);
+
+				if (!DefaultWidget -> IsInViewport())
 				{
-					IAR_GameplayInterface::Execute_Interact(Actor.Get(), Owner.Get());
+					DefaultWidget -> AddToViewport();
 				}
 			}
 		}
 	}
+	else
+	{
+		if (DefaultWidget)
+		{
+			DefaultWidget -> RemoveFromParent();
+			DefaultWidget = nullptr;
+		}
+	}
+}
+
+void UAR_InteractionComponent::PrimaryInteract()
+{
+	if (!FocusedActor)
+	{
+		return;
+	}
+	
+	APawn* Pawn = Cast<APawn>(GetOwner());
+
+	IAR_GameplayInterface::Execute_Interact(FocusedActor, Pawn);
 }

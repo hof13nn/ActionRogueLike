@@ -19,7 +19,8 @@ public:
 	UAR_ActionComponent();
 
 	UFUNCTION(BlueprintCallable, Category="Actions")
-	void AddAction(TSubclassOf<UAR_ActionBase> ActionClass);
+	void AddAction(AActor* Instigator, TSubclassOf<UAR_ActionBase> ActionClass);
+	void RemoveAction(UAR_ActionBase* Action);
 	UFUNCTION(BlueprintCallable, Category="Actions")
 	bool StartActionByName(AActor* Instigator, const FName& ActionName);
 	UFUNCTION(BlueprintCallable, Category="Actions")
