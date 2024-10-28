@@ -23,6 +23,9 @@ protected:
 	virtual void OnRegister() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void FindBestInteract();
+	
+	UFUNCTION(Server, Unreliable)
+	void ServerInteract(AActor* InFocus);
 public:
 	// Called every frame
 	void PrimaryInteract();

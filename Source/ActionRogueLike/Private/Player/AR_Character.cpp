@@ -105,6 +105,11 @@ void AAR_Character::OnConstruction(const FTransform& Transform)
 void AAR_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (AAR_PlayerController* PC = GetController<AAR_PlayerController>() )
+	{
+		SetupInput(PC);
+	}
 }
 
 float AAR_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
@@ -116,7 +121,7 @@ float AAR_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 	{
 		GetMesh() -> SetScalarParameterValueOnMaterials("TimeToHit", GetWorld() -> GetTimeSeconds());
 		
-		if (!AttributeComponent -> DecreaseHealth(Amount))
+		if (!AttributeComponent -> DecreaseHealth(this, Amount))
 		{
 			if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 			{
@@ -144,7 +149,7 @@ void AAR_Character::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AAR_Character::DecreaseHealth_Implementation(const float& Amount)
+void AAR_Character::DecreaseHealth_Implementation(AActor* InstigatorActor, const float& Amount)
 {
 	
 }
@@ -218,6 +223,7 @@ void AAR_Character::AddMappingContext(const AAR_PlayerController* PlayerControll
 			{
 				if (Config -> IMC_BaseContext.IsValid())
 				{
+					Subsystem -> ClearAllMappings();
 					Subsystem.Get() -> AddMappingContext(Config -> IMC_BaseContext.Get(), Config -> ContextPriority);
 
 					SetupInputComponent(InputComponent, Config);

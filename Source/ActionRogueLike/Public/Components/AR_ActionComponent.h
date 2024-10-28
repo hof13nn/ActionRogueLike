@@ -42,7 +42,9 @@ public:
 	
 protected:
 	virtual void OnRegister() override;
-	
+
+	UFUNCTION(Server, Reliable)
+	void ServerStartAction(AActor* Instigator, const FName& ActionName);
 private:
 	UPROPERTY()
 	TArray<UAR_ActionBase*> ActionsArr;

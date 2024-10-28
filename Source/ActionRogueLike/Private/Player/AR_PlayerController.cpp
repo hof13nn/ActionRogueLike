@@ -11,10 +11,17 @@ void AAR_PlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	if (AAR_Character* PlayerCharacter = Cast<AAR_Character>(InPawn))
+
+}
+
+void AAR_PlayerController::OnUnPossess()
+{
+	if (GetPawn())
 	{
-		PlayerCharacter -> SetupInput(this);
+		GetPawn() -> Destroy();
 	}
+	
+	Super::OnUnPossess();
 }
 
 void AAR_PlayerController::BeginPlay()
@@ -25,6 +32,11 @@ void AAR_PlayerController::BeginPlay()
 	{
 		GM -> OnAddCredits.AddUObject(this, &ThisClass::OnAddCredits);
 	}
+
+	// if (AAR_Character* PlayerCharacter = Cast<AAR_Character>(GetPawn()))
+	// {
+	// 	PlayerCharacter -> SetupInput(this);
+	// }
 }
 
 int32 AAR_PlayerController::GetCredits()

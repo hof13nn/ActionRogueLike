@@ -23,8 +23,8 @@ protected:
 	virtual void BeginPlay() override;
 	void SetupComponents();
 	UFUNCTION()
-	void OnDecreaseHealth(TWeakObjectPtr<AActor> InstigatorActor, TWeakObjectPtr<UAR_AttributeComponent> Component, float NewValue, float HealthDelta);
-	void DecreaseHealth_Implementation(const float& Amount) override;
+	void OnDecreaseHealth(AActor* InstigatorActor, UAR_AttributeComponent* Component, float NewValue, float HealthDelta);
+	void DecreaseHealth_Implementation(AActor* InstigatorActor, const float& Amount) override;
 	
 private:
 	UPROPERTY(VisibleAnywhere)

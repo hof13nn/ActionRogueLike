@@ -95,7 +95,7 @@ void AAR_AICharacter::OnSeePawn(APawn* Pawn)
 	}
 }
 
-void AAR_AICharacter::DecreaseHealth_Implementation(const float& Amount)
+void AAR_AICharacter::DecreaseHealth_Implementation(AActor* InstigatorActor, const float& Amount)
 {
 }
 
@@ -161,7 +161,7 @@ float AAR_AICharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 		
 		GetMesh() -> SetScalarParameterValueOnMaterials("TimeToHit", GetWorld() -> GetTimeSeconds());
 		
-		if (!AttributeComponent -> DecreaseHealth(Amount))
+		if (!AttributeComponent -> DecreaseHealth(this, Amount))
 		{
 			if (AAIController* AIController = Cast<AAIController>(GetController()))
 			{

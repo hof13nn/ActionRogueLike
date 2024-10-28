@@ -46,24 +46,10 @@ void UAR_InteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// if (ensure(CameraComponent.Get()))
-	// {
-	// 	//Viewport Size
-	// 	const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
-	// 	//Viewport Center!            
-	// 	const FVector2D  ViewportCenter =  FVector2D(ViewportSize.X/2, ViewportSize.Y/2);
-	// 	
-	// 	const FVector StartLocation = CameraComponent.Get() -> GetComponentLocation();
-	// 	const FVector EndLocation = FVector(ViewportCenter.X, ViewportCenter.Y, StartLocation.Z) * TraceLength;
-	//
-	// 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Yellow, false, 2.f, 0.f, 2.f);
-	// }
-	// else
-	// {
-	// 	UE_LOG(LogTemp, Error, TEXT("UAR_InteractionComponent::TickComponent: No Camera"));
-	// }
-
-	FindBestInteract();
+	if (const APawn* MyPawn = Cast<APawn>(GetOwner()); MyPawn -> IsLocallyControlled())
+	{
+		FindBestInteract();
+	}
 }
 
 void UAR_InteractionComponent::FindBestInteract()
@@ -94,7 +80,7 @@ void UAR_InteractionComponent::FindBestInteract()
 	{
 		if (CVarDebugDrawInteraction.GetValueOnGameThread())
 		{
-			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, TraceRadius, 32, HitColor, false, 2.f);
+			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, TraceRadius, 32, HitColor, false, 0.f);
 		}
 
 		if (AActor* HitActor = Hit.GetActor())
@@ -134,14 +120,19 @@ void UAR_InteractionComponent::FindBestInteract()
 	}
 }
 
-void UAR_InteractionComponent::PrimaryInteract()
+void UAR_InteractionComponent::ServerInteract_Implementation(AActor* InFocus)
 {
-	if (!FocusedActor)
+	if (!InFocus)
 	{
 		return;
 	}
 	
 	APawn* Pawn = Cast<APawn>(GetOwner());
 
-	IAR_GameplayInterface::Execute_Interact(FocusedActor, Pawn);
+	IAR_GameplayInterface::Execute_Interact(InFocus, Pawn);
+}
+
+void UAR_InteractionComponent::PrimaryInteract()
+{
+	ServerInteract(FocusedActor);
 }

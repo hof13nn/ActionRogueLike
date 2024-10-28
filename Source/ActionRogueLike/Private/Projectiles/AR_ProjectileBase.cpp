@@ -14,7 +14,8 @@ AAR_ProjectileBase::AAR_ProjectileBase()
 	
 	CachedLaunchPosition = FVector::ZeroVector;
 	Tags.Emplace(FTagLibrary::ProjectileTag);
-
+	SetReplicates(true);
+	
 	AAR_ProjectileBase::SetupComponents();
 }
 

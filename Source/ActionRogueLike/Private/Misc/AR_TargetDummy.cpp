@@ -45,7 +45,7 @@ void AAR_TargetDummy::SetupComponents()
 	}
 }
 
-void AAR_TargetDummy::OnDecreaseHealth(TWeakObjectPtr<AActor> InstigatorActor, TWeakObjectPtr<UAR_AttributeComponent> Component,
+void AAR_TargetDummy::OnDecreaseHealth(AActor* InstigatorActor, UAR_AttributeComponent* Component,
                                        float NewValue, float HealthDelta)
 {
 	if(ensure(StaticMeshComponent))
@@ -55,11 +55,11 @@ void AAR_TargetDummy::OnDecreaseHealth(TWeakObjectPtr<AActor> InstigatorActor, T
 	}
 }
 
-void AAR_TargetDummy::DecreaseHealth_Implementation(const float& Amount)
+void AAR_TargetDummy::DecreaseHealth_Implementation(AActor* InstigatorActor, const float& Amount)
 {
 	if (ensure(AttributeComponent))
 	{
-		AttributeComponent -> DecreaseHealth(Amount);
+		AttributeComponent -> DecreaseHealth(InstigatorActor, Amount);
 	}
 }
 

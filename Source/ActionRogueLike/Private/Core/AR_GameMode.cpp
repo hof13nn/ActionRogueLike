@@ -31,8 +31,8 @@ void AAR_GameMode::StartPlay()
 {
 	Super::StartPlay();
 
-	SetBotSpawnTimer();
-	SetItemSpawnTimer();
+	// SetBotSpawnTimer();
+	// SetItemSpawnTimer();
 }
 
 
@@ -215,7 +215,6 @@ void AAR_GameMode::RespawnPlayer(AController* Controller, AActor* OldPawn)
 	{
 		Controller -> UnPossess();
 		RestartPlayer(Controller);
-		OldPawn -> Destroy();
 	}
 }
 

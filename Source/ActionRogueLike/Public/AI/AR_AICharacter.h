@@ -27,7 +27,7 @@ protected:
 	void SetTarget(AActor* NewTarget);
 	UFUNCTION()
 	void OnSeePawn(APawn* Pawn);
-	virtual void DecreaseHealth_Implementation(const float& Amount) override;
+	virtual void DecreaseHealth_Implementation(AActor* InstigatorActor, const float& Amount) override;
 	virtual void IncreaseHealth_Implementation(const float& Amount) override;
 	virtual void RestoreHealth_Implementation() override;
 	virtual bool GetIsLowHealth_Implementation() override;

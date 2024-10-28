@@ -23,7 +23,7 @@ protected:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
-	UPROPERTY(BlueprintReadOnly, Category = UI, meta=(AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = UI, meta=(AllowPrivateAccess = true, ExposeOnSpawn = true))
 	AActor* AttachedToActor;
 	UPROPERTY(meta=(BindWidget))
 	USizeBox* ParentSizeBox;

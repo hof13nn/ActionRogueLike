@@ -16,6 +16,7 @@ class ACTIONROGUELIKE_API AAR_PlayerController : public APlayerController
 
 private:
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
 	virtual void BeginPlay() override;
 
 public:

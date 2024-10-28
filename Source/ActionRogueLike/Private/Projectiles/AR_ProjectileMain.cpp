@@ -95,7 +95,7 @@ void AAR_ProjectileMain::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 	{
 		if (OtherActor -> Implements<UAR_Damageable>())
 		{
-			IAR_Damageable::Execute_DecreaseHealth(OtherActor, Damage);
+			IAR_Damageable::Execute_DecreaseHealth(OtherActor, GetInstigator(), Damage);
 		}
 		
 		if (ensure(Explosion))

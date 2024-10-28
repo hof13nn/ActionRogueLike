@@ -8,6 +8,8 @@
 UAR_ActionComponent::UAR_ActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+
+	SetIsReplicatedByDefault(true);
 }
 
 void UAR_ActionComponent::OnRegister()
@@ -51,6 +53,11 @@ void UAR_ActionComponent::RemoveAction(UAR_ActionBase* Action)
 	}
 }
 
+void UAR_ActionComponent::ServerStartAction_Implementation(AActor* Instigator, const FName& ActionName)
+{
+	StartActionByName(Instigator, ActionName);
+}
+
 bool UAR_ActionComponent::StartActionByName(AActor* Instigator, const FName& ActionName)
 {
 	for (UAR_ActionBase* Action : ActionsArr)
@@ -63,6 +70,12 @@ bool UAR_ActionComponent::StartActionByName(AActor* Instigator, const FName& Act
 				GEngine -> AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FailedMsg);
 				return false;
 			}
+
+			if (!GetOwner() -> HasAuthority())
+			{
+				ServerStartAction(Instigator, ActionName);
+			}
+
 			
 			Action -> StartAction(Instigator);
 			return true;

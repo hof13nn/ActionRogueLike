@@ -22,7 +22,9 @@ private:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	UFUNCTION()
+	void OnRep_LidOpened();
 public:
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 	
@@ -37,6 +39,8 @@ private:
 	UBoxComponent* BoxComponent;
 	UPROPERTY(EditAnywhere)
 	float TargetPitch;
+	UPROPERTY(ReplicatedUsing="OnRep_LidOpened")
+	bool bIsOpen;
 	UPROPERTY(EditAnywhere)
 	UTimelineComponent* TimelineTemplate;
 };

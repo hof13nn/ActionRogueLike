@@ -48,9 +48,10 @@ protected:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	
 public:
+	UFUNCTION(BlueprintCallable)
 	void SetupInput(const AAR_PlayerController* PlayerController);
 	virtual void Tick(float DeltaTime) override;
-	virtual void DecreaseHealth_Implementation(const float& Amount) override;
+	virtual void DecreaseHealth_Implementation(AActor* InstigatorActor, const float& Amount) override;
 	virtual void IncreaseHealth_Implementation(const float& Amount) override;
 	virtual bool GetNeedHealth_Implementation() override;
 	virtual bool GetIsAlive_Implementation() override;

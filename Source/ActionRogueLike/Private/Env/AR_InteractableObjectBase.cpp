@@ -18,6 +18,8 @@ AAR_InteractableObjectBase::AAR_InteractableObjectBase()
 
 	bIsWithdraw = true;
 	CreditsValue = 0;
+
+	SetReplicates(true);
 }
 
 void AAR_InteractableObjectBase::SetupComponents()

@@ -23,7 +23,7 @@ class ACTIONROGUELIKE_API IAR_Damageable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void DecreaseHealth(const float& Amount);
+	void DecreaseHealth(AActor* InstigatorActor, const float& Amount);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void IncreaseHealth(const float& Amount);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

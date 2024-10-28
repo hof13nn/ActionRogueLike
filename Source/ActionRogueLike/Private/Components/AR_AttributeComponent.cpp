@@ -5,6 +5,7 @@
 
 #include "AR_AICharacter.h"
 #include "AR_Character.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values for this component's properties
@@ -16,13 +17,16 @@ UAR_AttributeComponent::UAR_AttributeComponent()
 
 	MaxHealth = 100.f;
 	CurrentHealth = MaxHealth;
+
+	SetIsReplicatedByDefault(true);
 }
 
-bool UAR_AttributeComponent::DecreaseHealth(const float& Amount)
+bool UAR_AttributeComponent::DecreaseHealth(AActor* InstigatorActor, const float& Amount)
 {
 	CurrentHealth = FMath::Max(0, CurrentHealth - Amount);
 
-	OnHealthChanged.Broadcast(nullptr, this, CurrentHealth, CurrentHealth / MaxHealth);
+	//OnHealthChanged.Broadcast(nullptr, this, CurrentHealth, CurrentHealth / MaxHealth);
+	MulticastHealthChanged(InstigatorActor, CurrentHealth, CurrentHealth / MaxHealth);
 	return GetIsAlive();
 }
 
@@ -78,4 +82,19 @@ UAR_AttributeComponent* UAR_AttributeComponent::GetAttributeComponent(AActor* Ta
 	}
 
 	return nullptr;
+}
+
+void UAR_AttributeComponent::MulticastHealthChanged_Implementation(AActor* Instigator, float NewValue, float HealthDelta)
+{
+	OnHealthChanged.Broadcast(Instigator, this, NewValue, HealthDelta);
+}
+
+void UAR_AttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UAR_AttributeComponent, CurrentHealth);
+	DOREPLIFETIME(UAR_AttributeComponent, MaxHealth);
+
+	//DOREPLIFETIME_CONDITION(UAR_AttributeComponent, MaxHealth, COND_OwnerOnly);
 }

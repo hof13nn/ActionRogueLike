@@ -2,9 +2,9 @@
 
 
 #include "AR_ItemChest.h"
-
 #include "Components/BoxComponent.h"
 #include "Engine/TimelineTemplate.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -15,6 +15,8 @@ AAR_ItemChest::AAR_ItemChest()
 
 	SetupComponents();
 	TargetPitch = 110.f;
+
+	//SetReplicates(true);
 }
 
 void AAR_ItemChest::SetupComponents()
@@ -76,16 +78,21 @@ void AAR_ItemChest::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AAR_ItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AAR_ItemChest, bIsOpen);
+}
+
+void AAR_ItemChest::OnRep_LidOpened()
+{
+	float CurrentPitch = bIsOpen ? TargetPitch : 0.f; 
+	LidMesh -> SetRelativeRotation(FRotator(CurrentPitch, 0.f, 0.f));
+}
+
 void AAR_ItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	// if (LidMesh)
-	// {
-	// 	LidMesh -> SetRelativeRotation(FRotator(TargetPitch, 0.f, 0.f));
-	//
-	// 	TimelineTemplate -> Play();
-	// 	
-	// 	return true;
-	// }
-	//
-	// return false;
+	bIsOpen = !bIsOpen;
+	OnRep_LidOpened();
 }
