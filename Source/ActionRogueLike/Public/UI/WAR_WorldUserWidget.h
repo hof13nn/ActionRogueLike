@@ -17,6 +17,7 @@ class ACTIONROGUELIKE_API UWAR_WorldUserWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void SetAttachedToActor(AActor* OwningActor);
 protected:
 	virtual void NativeConstruct() override;

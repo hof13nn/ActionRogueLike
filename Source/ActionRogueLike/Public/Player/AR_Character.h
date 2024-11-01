@@ -58,7 +58,9 @@ public:
 	TWeakObjectPtr<UCameraComponent> GetCameraComponent() const;
 	virtual FVector GetPawnViewLocation() const override;
 	UFUNCTION(Blueprintable)
-	UAR_AttributeComponent* GetAttributeComponent();
+	UAR_AttributeComponent* GetAttributeComponent() const;
+	UFUNCTION(Blueprintable)
+	UAR_ActionComponent* GetActionComponent() const;
 private:
 	UPROPERTY(EditAnywhere)
 	USpringArmComponent* SpringArmComponent;

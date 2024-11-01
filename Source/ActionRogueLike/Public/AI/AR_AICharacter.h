@@ -20,13 +20,15 @@ class ACTIONROGUELIKE_API AAR_AICharacter : public ACharacter, public IAR_Damage
 public:
 	// Sets default values for this character's properties
 	AAR_AICharacter();
-	UAR_AttributeComponent* GetAttributeComponent();
+	UAR_AttributeComponent* GetAttributeComponent() const;
+
 protected:
 	virtual void PostInitializeComponents() override;
 	void SetupComponents();
 	void SetTarget(AActor* NewTarget);
 	UFUNCTION()
 	void OnSeePawn(APawn* Pawn);
+	AActor* GetTargetActor();
 	virtual void DecreaseHealth_Implementation(AActor* InstigatorActor, const float& Amount) override;
 	virtual void IncreaseHealth_Implementation(const float& Amount) override;
 	virtual void RestoreHealth_Implementation() override;
@@ -44,4 +46,8 @@ private:
 	TSubclassOf<UWAR_WorldUserWidget> HealthBarWidgetClass;
 	UPROPERTY()
 	UWAR_WorldUserWidget* HealthBarWidget;
+	UPROPERTY(EditDefaultsOnly, Category = UI)
+	TSubclassOf<UWAR_WorldUserWidget> SpottedWidgetClass;
+	UPROPERTY()
+	UWAR_WorldUserWidget* SpottedWidget;;
 };

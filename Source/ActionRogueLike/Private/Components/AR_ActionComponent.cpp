@@ -53,6 +53,19 @@ void UAR_ActionComponent::RemoveAction(UAR_ActionBase* Action)
 	}
 }
 
+UAR_ActionBase* UAR_ActionComponent::GetAction(TSubclassOf<UAR_ActionBase> ActionClass)
+{
+	for (UAR_ActionBase* Action : ActionsArr)
+	{
+		if (Action && Action -> IsA(ActionClass))
+		{
+			return Action;
+		}
+	}
+
+	return nullptr;
+}
+
 void UAR_ActionComponent::ServerStartAction_Implementation(AActor* Instigator, const FName& ActionName)
 {
 	StartActionByName(Instigator, ActionName);

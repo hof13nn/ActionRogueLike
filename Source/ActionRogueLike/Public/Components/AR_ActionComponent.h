@@ -21,6 +21,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Actions")
 	void AddAction(AActor* Instigator, TSubclassOf<UAR_ActionBase> ActionClass);
 	void RemoveAction(UAR_ActionBase* Action);
+	UAR_ActionBase* GetAction(TSubclassOf<UAR_ActionBase> ActionClass);
 	UFUNCTION(BlueprintCallable, Category="Actions")
 	bool StartActionByName(AActor* Instigator, const FName& ActionName);
 	UFUNCTION(BlueprintCallable, Category="Actions")

@@ -18,6 +18,9 @@ UAR_AttributeComponent::UAR_AttributeComponent()
 	MaxHealth = 100.f;
 	CurrentHealth = MaxHealth;
 
+	MaxRage = 100.f;
+	CurrentRage = 0.f;
+
 	SetIsReplicatedByDefault(true);
 }
 
@@ -33,7 +36,25 @@ bool UAR_AttributeComponent::DecreaseHealth(AActor* InstigatorActor, const float
 void UAR_AttributeComponent::IncreaseHealth(const float& Amount)
 {
 	CurrentHealth = FMath::Min(MaxHealth, CurrentHealth + Amount);
-	OnHealthChanged.Broadcast(nullptr, this, CurrentHealth, CurrentHealth / MaxHealth);
+	MulticastHealthChanged(GetOwner(), CurrentHealth, CurrentHealth / MaxHealth);
+}
+
+bool UAR_AttributeComponent::DecreaseRage(AActor* InstigatorActor, const float& Amount)
+{
+	CurrentRage = FMath::Max(0, CurrentRage - Amount);
+
+	//OnHealthChanged.Broadcast(nullptr, this, CurrentHealth, CurrentHealth / MaxHealth);
+	MulticastRageChanged(InstigatorActor, CurrentRage, CurrentRage / MaxRage);
+
+	return true;
+}
+
+void UAR_AttributeComponent::IncreaseRage(const float& Amount)
+{
+	CurrentRage = FMath::Min(MaxRage, CurrentRage + Amount);
+
+	//OnHealthChanged.Broadcast(nullptr, this, CurrentHealth, CurrentHealth / MaxHealth);
+	MulticastRageChanged(GetOwner(), CurrentRage, CurrentRage / MaxRage);
 }
 
 void UAR_AttributeComponent::RestoreHealth()
@@ -67,6 +88,21 @@ float UAR_AttributeComponent::GetMaxHealth()
 	return MaxHealth;
 }
 
+float UAR_AttributeComponent::GetCurrentRage()
+{
+	return CurrentRage;
+}
+
+float UAR_AttributeComponent::GetMaxRage()
+{
+	return MaxRage;
+}
+
+bool UAR_AttributeComponent::GetIsEnoughRage(float RageCost)
+{
+	return CurrentRage - RageCost >= 0.f;
+}
+
 UAR_AttributeComponent* UAR_AttributeComponent::GetAttributeComponent(AActor* TargetActor)
 {
 	if (TargetActor)
@@ -89,12 +125,19 @@ void UAR_AttributeComponent::MulticastHealthChanged_Implementation(AActor* Insti
 	OnHealthChanged.Broadcast(Instigator, this, NewValue, HealthDelta);
 }
 
+void UAR_AttributeComponent::MulticastRageChanged_Implementation(AActor* Instigator, float NewValue, float HealthDelta)
+{
+	OnRageChanged.Broadcast(Instigator, this, NewValue, HealthDelta);
+}
+
 void UAR_AttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UAR_AttributeComponent, CurrentHealth);
 	DOREPLIFETIME(UAR_AttributeComponent, MaxHealth);
+	DOREPLIFETIME(UAR_AttributeComponent, CurrentRage);
+	DOREPLIFETIME(UAR_AttributeComponent, MaxRage);
 
 	//DOREPLIFETIME_CONDITION(UAR_AttributeComponent, MaxHealth, COND_OwnerOnly);
 }

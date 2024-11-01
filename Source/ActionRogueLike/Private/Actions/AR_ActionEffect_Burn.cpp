@@ -12,7 +12,7 @@ void UAR_ActionEffect_Burn::ApplyPeriodicEffect_Implementation(AActor* Instigato
 
 	if (UAR_ActionComponent* AC = GetOwningComponent())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s: ApplyPeriodicEffect: Burning %s for %f"), *GetNameSafe(this), *GetNameSafe(AC -> GetOwner()), Damage);
+		//UE_LOG(LogTemp, Warning, TEXT("%s: ApplyPeriodicEffect: Burning %s for %f"), *GetNameSafe(this), *GetNameSafe(AC -> GetOwner()), Damage);
 		UGameplayStatics::ApplyDamage(AC -> GetOwner(), Damage, nullptr, Instigator, nullptr);
 	}
 }

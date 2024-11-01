@@ -16,7 +16,7 @@ AAR_ItemChest::AAR_ItemChest()
 	SetupComponents();
 	TargetPitch = 110.f;
 
-	//SetReplicates(true);
+	SetReplicates(true);
 }
 
 void AAR_ItemChest::SetupComponents()

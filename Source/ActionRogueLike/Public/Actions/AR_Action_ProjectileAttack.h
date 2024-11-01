@@ -6,9 +6,6 @@
 #include "AR_ActionBase.h"
 #include "AR_Action_ProjectileAttack.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class ACTIONROGUELIKE_API UAR_Action_ProjectileAttack : public UAR_ActionBase
 {

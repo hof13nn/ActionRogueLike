@@ -34,7 +34,7 @@ void UWAR_WorldUserWidget::NativeTick(const FGeometry& MyGeometry, float InDelta
 
 			if (ParentSizeBox)
 			{
-				ParentSizeBox -> SetRenderTranslation(ScreenPosition);
+				ParentSizeBox -> SetRenderTranslation(ScreenPosition + FVector2D(0.f, -100.f));
 			}
 		}
 	}

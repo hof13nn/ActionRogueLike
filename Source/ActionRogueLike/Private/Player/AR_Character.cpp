@@ -138,6 +138,10 @@ float AAR_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 				GM -> OnActorKilled(this, DamageCauser);
 			}
 		}
+		else
+		{
+			AttributeComponent -> IncreaseRage(10.f);
+		}
 	}
 
 	return Amount;
@@ -192,9 +196,14 @@ FVector AAR_Character::GetPawnViewLocation() const
 	return CameraComponent -> GetComponentLocation();
 }
 
-UAR_AttributeComponent* AAR_Character::GetAttributeComponent()
+UAR_AttributeComponent* AAR_Character::GetAttributeComponent() const
 {
 	return AttributeComponent;
+}
+
+UAR_ActionComponent* AAR_Character::GetActionComponent() const
+{
+	return ActionComponent;
 }
 
 void AAR_Character::SetupInput(const AAR_PlayerController* PlayerController)
@@ -373,107 +382,6 @@ void AAR_Character::HandleDash(const FInputActionValue& InputActionValue)
 	}
 }
 
-// void AAR_Character::SpawnMainProjectile()
-// {
-// 	if (GetMesh())
-// 	{
-// 		FActorSpawnParameters SpawnParameters;
-// 		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-// 		SpawnParameters.Owner = this;
-// 		SpawnParameters.Instigator = this;
-// 		
-// 		const FVector SpawnLocation = GetMesh() -> GetSocketLocation(FSocketLibrary::CharacterProjectileSpawnSocket);
-// 		const FRotator Rotation = CalculateRotation(SpawnLocation);
-// 		const FTransform Transform = FTransform(Rotation, SpawnLocation);
-//
-// 		if (GetWorld())
-// 		{
-// 			if (!GetWorld() -> SpawnActor<AAR_ProjectileMain>(AAR_ProjectileMain::StaticClass(), Transform, SpawnParameters))
-// 			{
-// 				UE_LOG(LogTemp, Error, TEXT("AAR_Character::SpawnProjectile: Couldn't spawn Projectile"));
-// 			}
-// 			else
-// 			{
-// 				if (UParticleSystem* Cast = LoadObject<UParticleSystem>(this, *FPathLibrary::ProjectileMainCastPath))
-// 				{
-// 					UGameplayStatics::SpawnEmitterAttached(Cast, GetMesh(), FSocketLibrary::CharacterProjectileSpawnSocket);
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-//
-// void AAR_Character::SpawnSpecialProjectile()
-// {
-// 	if (GetMesh())
-// 	{
-// 		FActorSpawnParameters SpawnParameters;
-// 		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-// 		SpawnParameters.Owner = this;
-// 		SpawnParameters.Instigator = this;
-// 		
-// 		const FVector SpawnLocation = GetMesh() -> GetSocketLocation(FSocketLibrary::CharacterProjectileSpawnSocket);
-// 		const FRotator Rotation = CalculateRotation(SpawnLocation);
-// 		const FTransform Transform = FTransform(Rotation, SpawnLocation);
-//
-// 		if (GetWorld())
-// 		{
-// 			if (!GetWorld() -> SpawnActor<AAR_ProjectileBase>(AAR_ProjectileSpecial::StaticClass(), Transform, SpawnParameters))
-// 			{
-// 				UE_LOG(LogTemp, Error, TEXT("AAR_Character::SpawnProjectile: Couldn't spawn Projectile"));
-// 			}
-// 		}
-// 	}
-// }
-//
-// void AAR_Character::SpawnTeleportProjectile()
-// {
-// 	if (GetMesh())
-// 	{
-// 		FActorSpawnParameters SpawnParameters;
-// 		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-// 		SpawnParameters.Owner = this;
-// 		SpawnParameters.Instigator = this;
-// 		
-// 		const FVector SpawnLocation = GetMesh() -> GetSocketLocation(FSocketLibrary::CharacterProjectileSpawnSocket);
-// 		const FRotator Rotation = CalculateRotation(SpawnLocation);
-// 		const FTransform Transform = FTransform(Rotation, SpawnLocation);
-//
-// 		if (GetWorld())
-// 		{
-// 			if (!GetWorld() -> SpawnActor<AAR_ProjectileBase>(AAR_ProjectilePortal::StaticClass(), Transform, SpawnParameters))
-// 			{
-// 				UE_LOG(LogTemp, Error, TEXT("AAR_Character::SpawnProjectile: Couldn't spawn Projectile"));
-// 			}
-// 		}
-// 	}
-// }
-//
-// FRotator AAR_Character::CalculateRotation(const FVector& SpawnLocation) const
-// {
-// 	if (GetWorld() && CameraComponent)
-// 	{
-// 		FHitResult HitResult;
-//
-// 		FCollisionObjectQueryParams QueryParams;
-// 		QueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
-// 		QueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
-// 		
-// 		const FVector StartLocation = CameraComponent -> GetComponentLocation();
-// 		const FVector EndLocation = StartLocation + (CameraComponent -> GetForwardVector() * 5000.f);
-// 		
-// 		const bool bIsHit = GetWorld() -> LineTraceSingleByObjectType(HitResult, StartLocation, EndLocation, QueryParams);
-//
-// 		if (CVarDebugDrawProjectilePath.GetValueOnGameThread())
-// 		{
-// 			DrawDebugLine(GetWorld(), StartLocation, EndLocation, bIsHit ? FColor::Green : FColor::Red, false, 2.f, 0.f, 2.f);
-// 		}
-//
-// 		return UKismetMathLibrary::FindLookAtRotation(SpawnLocation, bIsHit ? HitResult.Location : EndLocation);
-// 	}
-//
-// 	return FRotator::ZeroRotator;
-// }
 
 void AAR_Character::HandleInteract(const FInputActionValue& InputActionValue)
 {

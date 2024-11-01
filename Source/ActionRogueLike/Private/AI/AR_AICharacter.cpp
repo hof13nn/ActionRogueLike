@@ -27,7 +27,7 @@ AAR_AICharacter::AAR_AICharacter()
 	SetupComponents();
 }
 
-UAR_AttributeComponent* AAR_AICharacter::GetAttributeComponent()
+UAR_AttributeComponent* AAR_AICharacter::GetAttributeComponent() const
 {
 	return AttributeComponent;
 }
@@ -89,10 +89,31 @@ void AAR_AICharacter::SetupComponents()
 
 void AAR_AICharacter::OnSeePawn(APawn* Pawn)
 {
-	if (Execute_GetIsAlive(Pawn))
+	if (GetTargetActor() != Pawn && Execute_GetIsAlive(Pawn))
 	{
 		SetTarget(Pawn);
+
+		if (ensureMsgf(SpottedWidgetClass, TEXT("SpottedWidgetClass is NULL")))
+		{
+			SpottedWidget = CreateWidget<UWAR_WorldUserWidget>(GetWorld(), SpottedWidgetClass);
+
+			if (SpottedWidget)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Spotted Widget"));2
+				SpottedWidget -> AddToViewport(10);
+			}
+		}
 	}
+}
+
+AActor* AAR_AICharacter::GetTargetActor()
+{
+	if (AAIController* AIController = Cast<AAIController>(GetController()))
+	{
+		return Cast<AActor>(AIController -> GetBlackboardComponent() -> GetValueAsObject("TargetActor"));
+	}
+
+	return nullptr;
 }
 
 void AAR_AICharacter::DecreaseHealth_Implementation(AActor* InstigatorActor, const float& Amount)
